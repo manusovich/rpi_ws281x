@@ -148,10 +148,10 @@ void matrix_render_dots(void)
     
     for (y = 0; y < HEIGHT; y++)
     {
-        matrix[dotposition][y] = 0x202020;
+        matrix[dotposition][y] = 0x404040;
     }
     
-    if (dotposition == HEIGHT - 1 && dotdirection > 0) {
+    if (dotposition == WIDTH - 1 && dotdirection > 0) {
         dotdirection = -1;
     }
     
