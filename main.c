@@ -97,21 +97,6 @@ void matrix_render(void)
     }
 }
 
-
-void matrix_render2(void)
-{
-    int x, y;
-    
-    for (x = 0; x < WIDTH; x++)
-    {
-        for (y = 0; y < HEIGHT; y++)
-        {
-            matrix[x][y] = dotcolors[y];
-            ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
-        }
-    }
-}
-
 void matrix_raise(void)
 {
     int x, y;
@@ -141,6 +126,20 @@ ws2811_led_t dotcolors[] =
     0x100010,  // purple
     0x200010,  // pink
 };
+
+void matrix_render2(void)
+{
+    int x, y;
+    
+    for (x = 0; x < WIDTH; x++)
+    {
+        for (y = 0; y < HEIGHT; y++)
+        {
+            matrix[x][y] = dotcolors[y];
+            ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
+        }
+    }
+}
 
 void matrix_bottom(void)
 {
