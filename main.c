@@ -114,17 +114,17 @@ int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 ws2811_led_t dotcolors[] =
 {
     0xAA0000,  // red
-    0x200000,  // red
-    0x201000,  // orange
-    0x201000,  // orange
-    0x202000,  // yellow
-    0x202000,  // yellow
-    0x002000,  // green
-    0x002020,  // lightblue
-    0x000020,  // blue
-    0x000020,  // blue
-    0x100010,  // purple
-    0x200010,  // pink
+    0xAA0000,  // red
+    0xAA8800,  // orange
+    0xAA8800,  // orange
+    0xAAAA00,  // yellow
+    0xAAAA00,  // yellow
+    0x00AA00,  // green
+    0x00AAAA,  // lightblue
+    0x0000AA,  // blue
+    0x0000AA,  // blue
+    0x880088,  // purple
+    0xAA0088,  // pink
 };
 
 void matrix_render2(void)
