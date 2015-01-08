@@ -110,6 +110,8 @@ void matrix_raise(void)
     }
 }
 
+int dotposition = 0;
+int dotdirection = 1;
 int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 ws2811_led_t dotcolors[] =
 {
@@ -127,7 +129,7 @@ ws2811_led_t dotcolors[] =
     0x200010,  // pink
 };
 
-void matrix_render2(void)
+void matrix_render_colors(void)
 {
     int x, y;
     
@@ -136,9 +138,29 @@ void matrix_render2(void)
         for (y = 0; y < HEIGHT; y++)
         {
             matrix[x][y] = dotcolors[y];
-            ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
         }
     }
+}
+
+void matrix_render_dots(void)
+{
+    int x, y;
+    
+    for (y = 0; y < HEIGHT; y++)
+    {
+        matrix[dotposition][y] = 0x202020;
+    }
+    
+    if (dotposition == HEIGHT - 1 && dotdirection > 0) {
+        dotdirection = -1;
+    }
+    
+    if (dotposition == 0 && dotdirection < 0) {
+        dotdirection = 1;
+    }
+    
+    dotposition = dotposition + dotdirection;
+    
 }
 
 void matrix_bottom(void)
@@ -188,7 +210,9 @@ int main(int argc, char *argv[])
 //        matrix_raise();
 //        matrix_bottom();
 //        matrix_render();
-        matrix_render2();
+        matrix_render_colors();
+        matrix_render_dots();
+        matrix_render();
 
         if (ws2811_render(&ledstring))
         {
