@@ -110,8 +110,8 @@ void matrix_raise(void)
     }
 }
 
-int dotposition = 0;
-int dotdirection = 1;
+int dotposition[] = {0,4,12,8,20,22,6,14,2,18,10,23};
+int dotdirection[] = {1,-1,1,-1,1,-1,1,-1,1,-1,1,-1};
 int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 ws2811_led_t dotcolors[] =
 {
@@ -148,18 +148,20 @@ void matrix_render_dots(void)
     
     for (y = 0; y < HEIGHT; y++)
     {
-        matrix[dotposition][y] = 0x404040;
+        matrix[dotposition[y]][y] = 0x404040;
+        
+        
+        if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
+            dotdirection[y] = -1;
+        }
+        
+        if (dotposition[y] == 0 && dotdirection[y] < 0) {
+            dotdirection[y] = 1;
+        }
+        
+        dotposition[y] = dotposition[y] + dotdirection[y];
+
     }
-    
-    if (dotposition == WIDTH - 1 && dotdirection > 0) {
-        dotdirection = -1;
-    }
-    
-    if (dotposition == 0 && dotdirection < 0) {
-        dotdirection = 1;
-    }
-    
-    dotposition = dotposition + dotdirection;
     
 }
 
