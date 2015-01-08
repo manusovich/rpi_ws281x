@@ -144,7 +144,7 @@ void matrix_render_colors(void)
 
 void matrix_render_dots(void)
 {
-    int x, y;
+    int y;
     
     for (y = 0; y < HEIGHT; y++)
     {
