@@ -53,8 +53,8 @@
 #define GPIO_PIN                                 18
 #define DMA                                      5
 
-#define WIDTH                                    288
-#define HEIGHT                                   1
+#define WIDTH                                    24
+#define HEIGHT                                   12
 #define LED_COUNT                                (WIDTH * HEIGHT)
 
 
@@ -97,6 +97,21 @@ void matrix_render(void)
     }
 }
 
+
+void matrix_render2(void)
+{
+    int x, y;
+    
+    for (x = 0; x < WIDTH; x++)
+    {
+        for (y = 0; y < HEIGHT; y++)
+        {
+            matrix[x][y] = dotcolors[y];
+            ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
+        }
+    }
+}
+
 void matrix_raise(void)
 {
     int x, y;
@@ -110,14 +125,18 @@ void matrix_raise(void)
     }
 }
 
-int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 ws2811_led_t dotcolors[] =
 {
     0x200000,  // red
+    0x200000,  // red
     0x201000,  // orange
+    0x201000,  // orange
+    0x202000,  // yellow
     0x202000,  // yellow
     0x002000,  // green
     0x002020,  // lightblue
+    0x000020,  // blue
     0x000020,  // blue
     0x100010,  // purple
     0x200010,  // pink
@@ -167,9 +186,10 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        matrix_raise();
-        matrix_bottom();
-        matrix_render();
+//        matrix_raise();
+//        matrix_bottom();
+//        matrix_render();
+        matrix_render2();
 
         if (ws2811_render(&ledstring))
         {
