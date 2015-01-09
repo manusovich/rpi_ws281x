@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <Foundation/Foundation.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -156,9 +157,9 @@ void matrix_render_colors(void) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(matrix[x][y]);
             ws2811_led_t color = createRGB(
-                    target.r + abs(target.r - rgb.r) / 2,
-                    target.g + abs(target.g - rgb.g) / 2,
-                    target.b + abs(target.b - rgb.b) / 2);
+                    (int) ((double) target.r + abs(rgb.r - target.r) / 1.5),
+                    (int) ((double) target.g + abs(rgb.g - target.g) / 1.5),
+                    (int) ((double) target.b + abs(rgb.b - target.b) / 1.5));
             matrix[x][y] = color;
         }
     }
