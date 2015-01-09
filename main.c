@@ -118,12 +118,12 @@ ws2811_led_t dotcolors[] =
     0x200000,  // red
     0x200000,  // red
     0x201000,  // orange
-    0x201000,  // orange
-    0x202000,  // yellow
-    0x202000,  // yellow
-    0x002000,  // green
-    0x002020,  // lightblue
-    0x000020,  // blue
+    0xEE8800,  // orange
+    0xEEEE00,  // yellow
+    0xEEEE00,  // yellow
+    0x00EE00,  // green
+    0x00EEEE,  // lightblue
+    0x0000EE,  // blue
     0x000020,  // blue
     0x100010,  // purple
     0x200010,  // pink
