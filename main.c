@@ -156,9 +156,9 @@ void matrix_render_colors(void) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(matrix[x][y]);
             ws2811_led_t color = createRGB(
-                    (int) ((double) target.r + ((double)rgb.r - target.r) / 1.01),
-                    (int) ((double) target.g + ((double)rgb.g - target.g) / 1.01),
-                    (int) ((double) target.b + ((double)rgb.b - target.b) / 1.01));
+                    (int) ((double) target.r + ((double) rgb.r - target.r) / 1.01),
+                    (int) ((double) target.g + ((double) rgb.g - target.g) / 1.01),
+                    (int) ((double) target.b + ((double) rgb.b - target.b) / 1.01));
             matrix[x][y] = color;
         }
     }
@@ -196,16 +196,15 @@ void matrix_render_thunderstorm() {
 
     for (y = 0; y < HEIGHT; y++) {
         if (gthunderstorm[y] >= 0) {
+            struct RGB target = getRGB(dotcolors[y]);
             int intensity = thunderstorm[gthunderstorm[y]];
             for (x = 0; x < WIDTH; x++) {
                 struct RGB rgb = getRGB(matrix[x][y]);
                 ws2811_led_t color = createRGB(
-                        rgb.r + (int) ((double) 30 / 100 * intensity),
-                        rgb.g + (int) ((double) 30 / 100 * intensity),
-                        rgb.b + (int) ((double) 30 / 100 * intensity));
-              //  for (x = 0; x < WIDTH; x++) {
+                        (int) ((double) target.r + ((double) rgb.r - target.r) / 1.01 + (int) ((double) 30 / 100 * intensity)),
+                        (int) ((double) target.g + ((double) rgb.g - target.g) / 1.01 + (int) ((double) 30 / 100 * intensity)),
+                        (int) ((double) target.b + ((double) rgb.b - target.b) / 1.01 + (int) ((double) 30 / 100 * intensity)));
                 matrix[x][y] = color;
-               // }
             }
             gthunderstorm[y]++;
             if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
