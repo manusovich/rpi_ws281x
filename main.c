@@ -81,6 +81,12 @@ ws2811_t ledstring =
                         },
         };
 
+struct RGB {
+    int r;
+    int g;
+    int b;
+};
+
 // thunderstorm20, 10, 0,
 int thunderstorm[] = {50, 0, 0, 0, 0, 0, 30, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 10, 0, 0, 0, 0, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; // %
 int gthunderstorm[] = {-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1};
@@ -109,8 +115,18 @@ ws2811_led_t dotcolors[] =
 ws2811_led_t matrix[WIDTH][HEIGHT];
 
 
-int createRGB(int r, int g, int b) {
-    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+ws2811_led_t createRGB(int r, int g, int b) {
+    return (ws2811_led_t) (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
+}
+
+struct RGB getRGB(int hexValue)
+{
+    struct RGB rgbColor;
+    rgbColor.r = (int) (((hexValue >> 16) & 0xFF) / 255.0);  // Extract the RR byte
+    rgbColor.g = (int) (((hexValue >> 8) & 0xFF) / 255.0);   // Extract the GG byte
+    rgbColor.b = (int) (((hexValue) & 0xFF) / 255.0);        // Extract the BB byte
+
+    return rgbColor;
 }
 
 void matrix_render(void) {
@@ -172,8 +188,12 @@ void matrix_render_thunderstorm() {
     for (y = 0; y < HEIGHT; y++) {
         if (gthunderstorm[y] >= 0) {
             int intensity = thunderstorm[gthunderstorm[y]];
+            struct RGB rgb = getRGB(dotcolors[y]);
             for (x = 0; x < WIDTH; x++) {
-                matrix[x][y] = createRGB(intensity, intensity, intensity);
+                matrix[x][y] = createRGB(
+                        (int) ((double) rgb.r / 0xFF * intensity),
+                        (int) ((double) rgb.g / 0xFF * intensity),
+                        (int) ((double) rgb.b / 0xFF * intensity));
             }
             gthunderstorm[y]++;
             if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
