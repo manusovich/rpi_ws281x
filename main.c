@@ -119,8 +119,7 @@ ws2811_led_t createRGB(int r, int g, int b) {
     return (ws2811_led_t) (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
 }
 
-struct RGB getRGB(int hexValue)
-{
+struct RGB getRGB(int hexValue) {
     struct RGB rgbColor;
     rgbColor.r = (int) (((hexValue >> 16) & 0xFF) / 255.0);  // Extract the RR byte
     rgbColor.g = (int) (((hexValue >> 8) & 0xFF) / 255.0);   // Extract the GG byte
@@ -189,11 +188,12 @@ void matrix_render_thunderstorm() {
         if (gthunderstorm[y] >= 0) {
             int intensity = thunderstorm[gthunderstorm[y]];
             struct RGB rgb = getRGB(dotcolors[y]);
+            ws2811_led_t color = createRGB(
+                    (int) ((double) rgb.r / 0xFF * intensity),
+                    (int) ((double) rgb.g / 0xFF * intensity),
+                    (int) ((double) rgb.b / 0xFF * intensity));
             for (x = 0; x < WIDTH; x++) {
-                matrix[x][y] = createRGB(
-                        (int) ((double) rgb.r / 0xFF * intensity),
-                        (int) ((double) rgb.g / 0xFF * intensity),
-                        (int) ((double) rgb.b / 0xFF * intensity));
+                matrix[x][y] = color;
             }
             gthunderstorm[y]++;
             if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
