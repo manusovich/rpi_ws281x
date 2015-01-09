@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <SceneKit/SceneKit.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -59,121 +60,137 @@
 
 
 ws2811_t ledstring =
-{
-    .freq = TARGET_FREQ,
-    .dmanum = DMA,
-    .channel =
-    {
-        [0] =
         {
-            .gpionum = GPIO_PIN,
-            .count = LED_COUNT,
-            .invert = 0,
-            .brightness = 255,
-        },
-        [1] =
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                        {
+                                [0] =
+                                        {
+                                                .gpionum = GPIO_PIN,
+                                                .count = LED_COUNT,
+                                                .invert = 0,
+                                                .brightness = 255,
+                                        },
+                                [1] =
+                                        {
+                                                .gpionum = 0,
+                                                .count = 0,
+                                                .invert = 0,
+                                                .brightness = 0,
+                                        },
+                        },
+        };
+
+// thunderstorm
+int thunderstorm[] = {90, 0, 0, 0, 0, 0, 70, 0, 90, 70, 50, 30, 0, 0}; // %
+int gthunderstorm[] = {-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1};
+
+
+int dotposition[] = {0, 4, 12, 8, 20, 22, 6, 14, 2, 18, 10, 23};
+int dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1};
+int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+ws2811_led_t dotcolors[] =
         {
-            .gpionum = 0,
-            .count = 0,
-            .invert = 0,
-            .brightness = 0,
-        },
-    },
-};
+                0x400000,  // red
+                0x400000,  // red
+                0x402000,  // orange
+                0x402000,  // orange
+                0x404000,  // yellow
+                0x404000,  // yellow
+                0x004000,  // green
+                0x004040,  // lightblue
+                0x000040,  // blue
+                0x000040,  // blue
+                0x200020,  // purple
+                0x400020,  // pink
+        };
+
 
 ws2811_led_t matrix[WIDTH][HEIGHT];
 
 
-void matrix_render(void)
-{
+int createRGB(int r, int g, int b) {
+    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
+
+void matrix_render(void) {
     int x, y;
 
-    for (x = 0; x < WIDTH; x++)
-    {
-        for (y = 0; y < HEIGHT; y++)
-        {
+    for (x = 0; x < WIDTH; x++) {
+        for (y = 0; y < HEIGHT; y++) {
             ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
         }
     }
 }
 
-void matrix_raise(void)
-{
+void matrix_raise(void) {
     int x, y;
 
-    for (y = 0; y < (HEIGHT - 1); y++)
-    {
-        for (x = 0; x < WIDTH; x++)
-        {
+    for (y = 0; y < (HEIGHT - 1); y++) {
+        for (x = 0; x < WIDTH; x++) {
             matrix[x][y] = matrix[x][y + 1];
         }
     }
 }
 
-int dotposition[] = {0,4,12,8,20,22,6,14,2,18,10,23};
-int dotdirection[] = {1,-1,1,-1,1,-1,1,-1,1,-1,1,-1};
-int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-ws2811_led_t dotcolors[] =
-{
-    0x400000,  // red
-    0x400000,  // red
-    0x402000,  // orange
-    0x402000,  // orange
-    0x404000,  // yellow
-    0x404000,  // yellow
-    0x004000,  // green
-    0x004040,  // lightblue
-    0x000040,  // blue
-    0x000040,  // blue
-    0x200020,  // purple
-    0x400020,  // pink
-};
 
-void matrix_render_colors(void)
-{
+void matrix_render_colors(void) {
     int x, y;
-    
-    for (x = 0; x < WIDTH; x++)
-    {
-        for (y = 0; y < HEIGHT; y++)
-        {
+
+    for (x = 0; x < WIDTH; x++) {
+        for (y = 0; y < HEIGHT; y++) {
             matrix[x][y] = dotcolors[y];
         }
     }
 }
 
-void matrix_render_dots(void)
-{
+void matrix_render_dots(void) {
     int y;
-    
-    for (y = 0; y < HEIGHT; y++)
-    {
+
+    for (y = 0; y < HEIGHT; y++) {
         matrix[dotposition[y]][y] = 0x404040;
-        
-        
+
+
         if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
             dotdirection[y] = -1;
         }
-        
+
         if (dotposition[y] == 0 && dotdirection[y] < 0) {
             dotdirection[y] = 1;
         }
-        
+
         dotposition[y] = dotposition[y] + dotdirection[y];
 
     }
-    
+
 }
 
-void matrix_bottom(void)
-{
+
+void matrix_render_thunderstorm() {
+    int x, y;
+
+    for (y = 0; y < HEIGHT; y++) {
+        if (gthunderstorm[y] >= 0) {
+            int intensity = thunderstorm[gthunderstorm[y]];
+            for (x = 0; x < WIDTH; x++) {
+                matrix[x][y] = createRGB(intensity, intensity, intensity);
+            }
+            gthunderstorm[y]++;
+            if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
+                gthunderstorm[y] = 0;
+            }
+        }
+    }
+}
+
+
+void matrix_bottom(void) {
     int i;
 
-    for (i = 0; i < ARRAY_SIZE(dotspos); i++)
-    {
+    for (i = 0; i < ARRAY_SIZE(dotspos); i++) {
         dotspos[i]++;
-        if (dotspos[i] > (WIDTH - 1))
-        {
+        if (dotspos[i] > (WIDTH - 1)) {
             dotspos[i] = 0;
         }
 
@@ -181,43 +198,38 @@ void matrix_bottom(void)
     }
 }
 
-static void ctrl_c_handler(int signum)
-{
+static void ctrl_c_handler(int signum) {
     ws2811_fini(&ledstring);
 }
 
-static void setup_handlers(void)
-{
+static void setup_handlers(void) {
     struct sigaction sa =
-    {
-        .sa_handler = ctrl_c_handler,
-    };
+            {
+                    .sa_handler = ctrl_c_handler,
+            };
 
     sigaction(SIGKILL, &sa, NULL);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int ret = 0;
 
     setup_handlers();
 
-    if (ws2811_init(&ledstring))
-    {
+    if (ws2811_init(&ledstring)) {
         return -1;
     }
 
-    while (1)
-    {
+    while (1) {
 //        matrix_raise();
 //        matrix_bottom();
 //        matrix_render();
         matrix_render_colors();
         matrix_render_dots();
+        matrix_render_thunderstorm();
         matrix_render();
 
-        if (ws2811_render(&ledstring))
-        {
+        if (ws2811_render(&ledstring)) {
             ret = -1;
             break;
         }
