@@ -38,7 +38,6 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
-#include <AppKit/AppKit.h>
 
 #include "clk.h"
 #include "gpio.h"
