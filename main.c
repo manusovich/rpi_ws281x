@@ -38,7 +38,6 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
-#include <SceneKit/SceneKit.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -171,7 +170,7 @@ void matrix_render_thunderstorm() {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-        if (gthunderstorm[y] >= 0) {
+        if ( gthunderstorm[y] >= 0) {
             int intensity = thunderstorm[gthunderstorm[y]];
             for (x = 0; x < WIDTH; x++) {
                 matrix[x][y] = createRGB(intensity, intensity, intensity);
