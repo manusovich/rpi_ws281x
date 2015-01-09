@@ -156,9 +156,9 @@ void matrix_render_colors(void) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(matrix[x][y]);
             ws2811_led_t color = createRGB(
-                    (int) (target.r - (double) (target.r - rgb.r) / 2),
-                    (int) (target.g - (double) (target.g - rgb.g) / 2),
-                    (int) (target.b - (double) (target.b - rgb.b) / 2));
+                    (int) (target.r - (double) (target.r - rgb.r) / 5),
+                    (int) (target.g - (double) (target.g - rgb.g) / 5),
+                    (int) (target.b - (double) (target.b - rgb.b) / 5));
             matrix[x][y] = color;
         }
     }
@@ -171,9 +171,9 @@ void matrix_render_exciter(void) {
         struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
         ws2811_led_t color = createRGB(
-                rgb.r + 30,
-                rgb.g + 30,
-                rgb.b + 30);
+                rgb.r + 40,
+                rgb.g + 40,
+                rgb.b + 40);
         matrix[dotposition[y]][y] = color;
 
         if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
