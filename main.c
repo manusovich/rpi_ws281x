@@ -82,7 +82,7 @@ ws2811_t ledstring =
         };
 
 // thunderstorm
-int thunderstorm[] = {90, 0, 0, 0, 0, 0, 70, 0, 90, 70, 50, 30, 0, 0}; // %
+int thunderstorm[] = {90, 0, 0, 0, 0, 0, 70, 0, 90, 70, 50, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // %
 int gthunderstorm[] = {-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1};
 
 
@@ -170,7 +170,7 @@ void matrix_render_thunderstorm() {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-        if ( gthunderstorm[y] >= 0) {
+        if (gthunderstorm[y] >= 0) {
             int intensity = thunderstorm[gthunderstorm[y]];
             for (x = 0; x < WIDTH; x++) {
                 matrix[x][y] = createRGB(intensity, intensity, intensity);
