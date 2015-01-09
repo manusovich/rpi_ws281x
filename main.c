@@ -88,7 +88,7 @@ struct RGB {
 };
 
 // thunderstorm20, 10, 0,
-int thunderstorm[] = {50, 0, 0, 0, 0, 0, 30, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 10, 0, 0, 0, 0, 0, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}; // %
+int thunderstorm[] = {100, 0, 0, 0, 0, 0, 70, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 30, 10, 0, 0, 0, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // %
 int gthunderstorm[] = {-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1};
 
 
@@ -187,12 +187,12 @@ void matrix_render_thunderstorm() {
     for (y = 0; y < HEIGHT; y++) {
         if (gthunderstorm[y] >= 0) {
             int intensity = thunderstorm[gthunderstorm[y]];
-//            struct RGB rgb = getRGB(dotcolors[y]);
-//            ws2811_led_t color = createRGB(
-//                    (int) ((double) rgb.r / 0xFF * intensity),
-//                    (int) ((double) rgb.g / 0xFF * intensity),
-//                    (int) ((double) rgb.b / 0xFF * intensity));
-            ws2811_led_t color = createRGB(intensity, intensity, intensity);
+            struct RGB rgb = getRGB(dotcolors[y]);
+            ws2811_led_t color = createRGB(
+                    (int) ((double) rgb.r / 100 * intensity),
+                    (int) ((double) rgb.g / 100 * intensity),
+                    (int) ((double) rgb.b / 100 * intensity));
+//            ws2811_led_t color = createRGB(intensity, intensity, intensity);
             for (x = 0; x < WIDTH; x++) {
                 matrix[x][y] = color;
             }
