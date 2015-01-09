@@ -121,10 +121,9 @@ ws2811_led_t createRGB(int r, int g, int b) {
 
 struct RGB getRGB(int hexValue) {
     struct RGB rgbColor;
-    rgbColor.r = (int) (((hexValue >> 16) & 0xFF) / 255.0);  // Extract the RR byte
-    rgbColor.g = (int) (((hexValue >> 8) & 0xFF) / 255.0);   // Extract the GG byte
-    rgbColor.b = (int) (((hexValue) & 0xFF) / 255.0);        // Extract the BB byte
-
+    rgbColor.r = (hexValue >> 16) & 0xff;
+    rgbColor.g = (hexValue >> 8) & 0xff;
+    rgbColor.b = hexValue & 0xff;
     return rgbColor;
 }
 
