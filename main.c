@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <AppKit/AppKit.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -95,7 +96,7 @@ int gthunderstorm[] = {-1, -1, -1, -1, -1, 0, -1, 10, -1, -1, -1, -1};
 int dotposition[] = {0, 4, 12, 8, 20, 22, 6, 14, 2, 18, 10, 23};
 int dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1};
 int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-ws2811_led_t dotcolors[] =
+ws2811_led_t dotcolors[] = // should not be more than 0xDD (!)
         {
                 0x400000,  // red 0
                 0x400000,  // red 1
@@ -151,19 +152,30 @@ void matrix_raise(void) {
 void matrix_render_colors(void) {
     int x, y;
 
-    for (x = 0; x < WIDTH; x++) {
-        for (y = 0; y < HEIGHT; y++) {
-            matrix[x][y] = dotcolors[y];
+    for (y = 0; y < HEIGHT; y++) {
+        struct RGB target = getRGB(dotcolors[y]);
+        for (x = 0; x < WIDTH; x++) {
+            struct RGB rgb = getRGB(matrix[x][y]);
+            ws2811_led_t color = createRGB(
+                    target.r - (target.r - rgb.r) / 2,
+                    target.g - (target.g - rgb.g) / 2,
+                    target.b - (target.b - rgb.b) / 2);
+            matrix[x][y] = color;
         }
     }
 }
 
-void matrix_render_dots(void) {
+void matrix_render_exciter(void) {
     int y;
 
     for (y = 0; y < HEIGHT; y++) {
-        matrix[dotposition[y]][y] = 0x404040;
+        struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
+        ws2811_led_t color = createRGB(
+                rgb.r + 0x10,
+                rgb.g + 0x10,
+                rgb.b + 0x10);
+        matrix[dotposition[y]][y] = color;
 
         if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
             dotdirection[y] = -1;
@@ -191,7 +203,6 @@ void matrix_render_thunderstorm() {
                     rgb.r + (int) ((double) 0x20 / 100 * intensity),
                     rgb.g + (int) ((double) 0x20 / 100 * intensity),
                     rgb.b + (int) ((double) 0x20 / 100 * intensity));
-//            ws2811_led_t color = createRGB(intensity, intensity, intensity);
             for (x = 0; x < WIDTH; x++) {
                 matrix[x][y] = color;
             }
@@ -240,11 +251,8 @@ int main(int argc, char *argv[]) {
     }
 
     while (1) {
-//        matrix_raise();
-//        matrix_bottom();
-//        matrix_render();
         matrix_render_colors();
-        matrix_render_dots();
+        matrix_render_exciter();
         matrix_render_thunderstorm();
         matrix_render();
 
