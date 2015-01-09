@@ -200,9 +200,9 @@ void matrix_render_thunderstorm() {
             for (x = 0; x < WIDTH; x++) {
                 struct RGB rgb = getRGB(matrix[x][y]);
                 ws2811_led_t color = createRGB(
-                        rgb.r + (int) ((double) 0x20 / 100 * intensity),
-                        rgb.g + (int) ((double) 0x20 / 100 * intensity),
-                        rgb.b + (int) ((double) 0x20 / 100 * intensity));
+                        rgb.r + (int) ((double) 30 / 100 * intensity),
+                        rgb.g + (int) ((double) 30 / 100 * intensity),
+                        rgb.b + (int) ((double) 30 / 100 * intensity));
               //  for (x = 0; x < WIDTH; x++) {
                 matrix[x][y] = color;
                // }
