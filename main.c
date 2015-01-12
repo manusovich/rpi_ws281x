@@ -53,8 +53,8 @@
 #define GPIO_PIN                                 18
 #define DMA                                      5
 
-#define WIDTH                                    24
-#define HEIGHT                                   12
+#define WIDTH                                    18
+#define HEIGHT                                   16
 #define LED_COUNT                                (WIDTH * HEIGHT)
 
 
