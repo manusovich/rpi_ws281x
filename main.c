@@ -98,9 +98,9 @@ int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 ws2811_led_t dotcolors[] = // should not be more than 0xDD (!)
         {
                 0x400000,  // red 0
-                0x400000,  // red 1
-                0x402000,  // orange 2
-                0x402000,  // orange 3
+                0x804000,  // orange 1
+                0x804000,  // green 2
+                0x804000,  // green 3
                 0x404000,  // yellow 4
                 0x404000,  // yellow 5
                 0x004000,  // green 6
