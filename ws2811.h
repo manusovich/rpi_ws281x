@@ -35,7 +35,7 @@
 #include "pwm.h"
 
 
-#define WS2811_TARGET_FREQ                       800000   // Can go as low as 400000
+#define WS2811_TARGET_FREQ                       400000   // Can go as low as 400000
 
 struct ws2811_device;
 
