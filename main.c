@@ -326,7 +326,8 @@ int main(int argc, char *argv[]) {
         } else {
 
             //if (c % 2 == 0) {
-              matrix_render_colors();
+              matrix_render_exciter();
+              //matrix_render_colors();
               matrix_render();
           //} else {
           //    matrix_render_fill(0);
@@ -339,7 +340,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 15);
+        usleep(1000000 / 4);
         c++;
     }
 
