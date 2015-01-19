@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 * 2);
+        usleep(1000000 * 5);
         c++;
     }
 
