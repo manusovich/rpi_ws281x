@@ -302,10 +302,14 @@ int main(int argc, char *argv[]) {
 //        matrix_render_white_and_black();
 //        matrix_render();
 
-        if (c % 2) {
+        if (c % 4 == 0) {
             matrix_render_fill(0);
-        } else {
+        } else if (c % 4 == 1) {
             matrix_render_fill(0xff0000);
+        } else if (c % 4 == 2) {
+            matrix_render_fill(0x00ff00);
+        } else if (c % 4 == 3) {
+            matrix_render_fill(0x0000ff);
         }
 
 
