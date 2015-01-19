@@ -251,7 +251,7 @@ int main(int argc, char *argv[]) {
 
     while (1) {
         matrix_render_exciter();
-        matrix_render_thunderstorm();
+        //matrix_render_thunderstorm();
         matrix_render_colors();
         matrix_render();
 
@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 15);
+        usleep(1000000 / 50);
     }
 
     ws2811_fini(&ledstring);
