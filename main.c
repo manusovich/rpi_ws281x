@@ -305,13 +305,13 @@ int main(int argc, char *argv[]) {
         if (c % 5 == 0) {
             matrix_render_fill(0);
         } else if (c % 5 == 1) {
-            matrix_render_fill(0xff0000);
+            matrix_render_fill(0x00ff0000);
         } else if (c % 5 == 2) {
-            matrix_render_fill(0x00ff00);
+            matrix_render_fill(0x0000ff00);
         } else if (c % 5 == 3) {
-            matrix_render_fill(0x0000ff);
+            matrix_render_fill(0x000000ff);
         } else if (c % 5 == 4) {
-            matrix_render_fill(0xffffff);
+            matrix_render_fill(0x00ffffff);
         }
 
         if (ws2811_render(&ledstring)) {
