@@ -264,7 +264,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 50);
+        usleep(1000000);
     }
 
     ws2811_fini(&ledstring);
