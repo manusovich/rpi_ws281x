@@ -683,7 +683,11 @@ int ws2811_render(ws2811_t *ws2811)
 {
     volatile uint8_t *pwm_raw = ws2811->device->pwm_raw;
     int maxcount = max_channel_led_count(ws2811);
-    int bitpos = 30;
+
+    int bitposdef = 29;
+
+
+    int bitpos = bitposdef;
     int i, j, k, l, chan;
 
     for (chan = 0; chan < RPI_PWM_CHANNELS; chan++)         // Channel
@@ -733,7 +737,7 @@ int ws2811_render(ws2811_t *ws2811)
                             // Every other word is on the same channel
                             wordpos += 2;
 
-                            bitpos = 31;
+                            bitpos = bitposdef;
                         }
                     }
                 }
