@@ -160,6 +160,15 @@ void matrix_raise(void) {
     }
 }
 
+void matrix_fill(int c) {
+    int x, y;
+
+    for (y = 0; y < (HEIGHT - 1); y++) {
+        for (x = 0; x < WIDTH; x++) {
+            matrix[x][y] = c;
+        }
+    }
+}
 
 void matrix_render_colors(void) {
     int x, y;
@@ -326,7 +335,7 @@ int main(int argc, char *argv[]) {
         } else {
 
             //if (c % 2 == 0) {
-            matrix_render_fill(0);
+            matrix_fill(0);
             matrix_render_exciter();
               //matrix_render_colors();
               matrix_render();
