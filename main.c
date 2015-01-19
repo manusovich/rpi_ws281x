@@ -163,9 +163,9 @@ void matrix_raise(void) {
 void matrix_fill(int c) {
     int x, y;
 
-    for (y = 0; y < (HEIGHT - 1); y++) {
+    for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
-            matrix[x][y] = c;
+            matrix[x][y] = (ws2811_led_t) c;
         }
     }
 }
