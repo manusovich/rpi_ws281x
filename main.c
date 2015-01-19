@@ -300,18 +300,22 @@ int main(int argc, char *argv[]) {
         //matrix_render_thunderstorm();
         //  matrix_render_colors();
 //        matrix_render_white_and_black();
-//        matrix_render();
 
-        if (c % 5 == 0) {
-            matrix_render_fill(0);
-        } else if (c % 5 == 1) {
-            matrix_render_fill(0xff0000);
-        } else if (c % 5 == 2) {
-            matrix_render_fill(0x00ff00);
-        } else if (c % 5 == 3) {
-            matrix_render_fill(0x0000ff);
-        } else if (c % 5 == 4) {
-            matrix_render_fill(0xffffff);
+        if (c < 6) {
+            if (c % 5 == 0) {
+                matrix_render_fill(0);
+            } else if (c % 5 == 1) {
+                matrix_render_fill(0xff0000);
+            } else if (c % 5 == 2) {
+                matrix_render_fill(0x00ff00);
+            } else if (c % 5 == 3) {
+                matrix_render_fill(0x0000ff);
+            } else if (c % 5 == 4) {
+                matrix_render_fill(0xffffff);
+            }
+        } else {
+            matrix_render_colors();
+            matrix_render();
         }
 
         if (ws2811_render(&ledstring)) {
