@@ -69,7 +69,7 @@ ws2811_t ledstring =
                                                 .gpionum = GPIO_PIN,
                                                 .count = LED_COUNT,
                                                 .invert = 0,
-                                                .brightness = 20,
+                                                .brightness = 255,
                                         },
                                 [1] =
                                         {
@@ -291,7 +291,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 /15);
+        usleep(1000000);
     }
 
     ws2811_fini(&ledstring);
