@@ -303,9 +303,9 @@ int main(int argc, char *argv[]) {
 //        matrix_render();
 
         if (c % 5 == 0) {
-            matrix_render_fill(createRGB(0, 0, 0xff));
+            matrix_render_fill(0);
         } else if (c % 5 == 1) {
-            matrix_render_fill(0x00000);
+            matrix_render_fill(0xff0000);
         } else if (c % 5 == 2) {
             matrix_render_fill(0x00ff00);
         } else if (c % 5 == 3) {
