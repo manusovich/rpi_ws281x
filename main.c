@@ -54,7 +54,7 @@
 #define DMA                                      5
 
 #define WIDTH                                    18
-#define HEIGHT                                   13
+#define HEIGHT                                   10
 #define LED_COUNT                                (WIDTH * HEIGHT)
 
 
@@ -155,10 +155,10 @@ void matrix_render_colors(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-        struct RGB target = getRGB(dotcolors[y]);
+      //  struct RGB target = getRGB(dotcolors[y]);
         for (x = 0; x < WIDTH; x++) {
            // struct RGB rgb = getRGB(matrix[x][y]);
-            ws2811_led_t color =  createRGB(target.r, target.g, target.b);
+            ws2811_led_t color =  dotcolors[y];
 
 //                    createRGB(
 //                    abs(target.r - rgb.r) / 2,
