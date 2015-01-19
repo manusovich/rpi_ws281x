@@ -169,6 +169,30 @@ void matrix_render_colors(void) {
     }
 }
 
+void matrix_render_white_and_black(void) {
+    int x, y;
+
+    for (y = 0; y < HEIGHT; y++) {
+        //  struct RGB target = getRGB(dotcolors[y]);
+        for (x = 0; x < WIDTH; x++) {
+            ws2811_led_t color;
+            if (x % 2  == 0) {
+                color = createRGB(100, 100, 100);
+            } else {
+                color = createRGB(0, 0, 0);
+            }
+            // struct RGB rgb = getRGB(matrix[x][y]);
+//            ws2811_led_t color =  dotcolors[y];
+//
+//                    createRGB(
+//                    abs(target.r - rgb.r) / 2,
+//                    abs(target.g - rgb.g) / 2,
+//                    abs(target.b = rgb.b) / 2);
+            matrix[x][y] = color;
+        }
+    }
+}
+
 void matrix_render_exciter(void) {
     int y;
 
@@ -257,7 +281,8 @@ int main(int argc, char *argv[]) {
     while (1) {
         //matrix_render_exciter();
         //matrix_render_thunderstorm();
-        matrix_render_colors();
+      //  matrix_render_colors();
+        matrix_render_white_and_black();
         matrix_render();
 
         if (ws2811_render(&ledstring)) {
