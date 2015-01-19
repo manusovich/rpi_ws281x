@@ -97,21 +97,21 @@ int dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 ws2811_led_t dotcolors[] = // should not be more than 0xDD (!)
         {
-                0x400000,  // red 0
-                0x402000,  // orange 1
-                0x004000,  // green 2
-                0x404000,  // yellow 3
-                0x004000,  // green 4
-                0x004040,  // lightblue 5
-                0x000040,  // blue 6
-                0x200020,  // purple 7
-                0x400020,  // pink 8
-                0x200020,  // purple 7
-                0x000040,  // blue 6
-                0x004000,  // green 4
-                0x404000,  // yellow 3
-                0x402000,  // orange 1
-                0x400000,  // red 0
+                0x600000,  // red 0
+                0x603000,  // orange 1
+                0x006000,  // green 2
+                0x606000,  // yellow 3
+                0x006000,  // green 4
+                0x006060,  // lightblue 5
+                0x000060,  // blue 6
+                0x300030,  // purple 7
+                0x600030,  // pink 8
+                0x300030,  // purple 7
+                0x000060,  // blue 6
+                0x006000,  // green 4
+                0x606000,  // yellow 3
+                0x603000,  // orange 1
+                0x600000,  // red 0
         };
 
 
