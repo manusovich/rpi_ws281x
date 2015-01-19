@@ -180,6 +180,10 @@ void matrix_render_white_and_black(void) {
 //                color = ((ws2811_led_t) 0x333333);
 //            } else {
                 color = ((ws2811_led_t) 0x000000);
+            if (y == 2 && x == 5) {
+                color = ((ws2811_led_t) 0x333333);
+//
+            }
 //            }
             // struct RGB rgb = getRGB(matrix[x][y]);
 //            ws2811_led_t color =  dotcolors[y];
