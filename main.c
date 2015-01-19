@@ -54,7 +54,7 @@
 #define DMA                                      5
 
 #define WIDTH                                    18
-#define HEIGHT                                   8
+#define HEIGHT                                   13
 #define LED_COUNT                                (WIDTH * HEIGHT)
 
 
