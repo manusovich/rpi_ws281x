@@ -118,7 +118,7 @@ typedef struct
 
 #define PAGE_SIZE                                (1 << 12)
 #define PAGE_MASK                                (~(PAGE_SIZE - 1))
-#define PAGE_OFFSET(page)                        (page & (PAGE_SIZE - 1) +2)
+#define PAGE_OFFSET(page)                        (page & (PAGE_SIZE - 1))
 
 
 typedef struct dma_page
