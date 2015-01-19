@@ -301,6 +301,16 @@ int main(int argc, char *argv[]) {
         //  matrix_render_colors();
 //        matrix_render_white_and_black();
 
+        matrix_render_fill(0);
+
+        if (ws2811_render(&ledstring)) {
+            ret = -1;
+            break;
+        }
+
+
+
+
         if (c < 6) {
             if (c % 5 == 0) {
                 matrix_render_fill(0);
@@ -314,12 +324,13 @@ int main(int argc, char *argv[]) {
                 matrix_render_fill(0xffffff);
             }
         } else {
-          if (c % 2 == 0) {
+
+            //if (c % 2 == 0) {
               matrix_render_colors();
               matrix_render();
-          } else {
-              matrix_render_fill(0);
-          }
+          //} else {
+          //    matrix_render_fill(0);
+         // }
         }
 
         if (ws2811_render(&ledstring)) {
@@ -328,7 +339,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 * 5);
+        usleep(1000000);
         c++;
     }
 
