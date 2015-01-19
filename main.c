@@ -157,7 +157,7 @@ void matrix_render_colors(void) {
     for (y = 0; y < HEIGHT; y++) {
         struct RGB target = getRGB(dotcolors[y]);
         for (x = 0; x < WIDTH; x++) {
-            struct RGB rgb = getRGB(matrix[x][y]);
+           // struct RGB rgb = getRGB(matrix[x][y]);
             ws2811_led_t color =  createRGB(target.r, target.g, target.b);
 
 //                    createRGB(
