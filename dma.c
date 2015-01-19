@@ -167,7 +167,7 @@ dma_cb_t *dma_desc_alloc(uint32_t descriptors)
     vaddr = mmap(NULL, pages * PAGE_SIZE,
                  PROT_READ | PROT_WRITE,
                  MAP_SHARED | MAP_ANONYMOUS | MAP_NORESERVE |
-                 MAP_LOCKED, -1, 1);
+                 MAP_LOCKED, -1, 0);
     if (vaddr == MAP_FAILED)
     {
         perror("dma_desc_alloc() mmap() failed");

@@ -51,7 +51,7 @@
 
 #define TARGET_FREQ                              WS2811_TARGET_FREQ
 #define GPIO_PIN                                 18
-#define DMA                                      5
+#define DMA                                      0
 
 #define WIDTH                                    18
 #define HEIGHT                                   10
