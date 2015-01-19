@@ -301,12 +301,12 @@ int main(int argc, char *argv[]) {
         //  matrix_render_colors();
 //        matrix_render_white_and_black();
 
-        matrix_render_fill(0);
+//        matrix_render_fill(0);
 
-        if (ws2811_render(&ledstring)) {
-            ret = -1;
-            break;
-        }
+//        if (ws2811_render(&ledstring)) {
+//            ret = -1;
+//            break;
+//        }
 
 
 
