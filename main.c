@@ -69,7 +69,7 @@ ws2811_t ledstring =
                                                 .gpionum = GPIO_PIN,
                                                 .count = LED_COUNT,
                                                 .invert = 0,
-                                                .brightness = 50,
+                                                .brightness = 255,
                                         },
                                 [1] =
                                         {
@@ -314,8 +314,12 @@ int main(int argc, char *argv[]) {
                 matrix_render_fill(0xffffff);
             }
         } else {
-            matrix_render_colors();
-            matrix_render();
+          if (c % 2 == 0) {
+              matrix_render_colors();
+              matrix_render();
+          } else {
+              matrix_render_fill(0);
+          }
         }
 
         if (ws2811_render(&ledstring)) {
