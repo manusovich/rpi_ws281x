@@ -119,7 +119,7 @@ ws2811_led_t matrix[WIDTH][HEIGHT];
 
 
 ws2811_led_t createRGB(int r, int g, int b) {
-    return (ws2811_led_t) (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
+    return (ws2811_led_t) (((g & 0xff) << 16) + ((b & 0xff) << 8) + (r & 0xff));
 }
 
 struct RGB getRGB(int hexValue) {
@@ -303,7 +303,7 @@ int main(int argc, char *argv[]) {
 //        matrix_render();
 
 //        if (c % 5 == 0) {
-            matrix_render_fill(0);
+            matrix_render_fill(createRGB(0, 0, 0xff));
 //        } else if (c % 5 == 1) {
 //            matrix_render_fill(0x00ff0000);
 //        } else if (c % 5 == 2) {
