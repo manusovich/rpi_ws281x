@@ -331,18 +331,6 @@ int main(int argc, char *argv[]) {
             }
         } else {
 
-
-            matrix_render_fill(0);
-
-        if (ws2811_render(&ledstring)) {
-            ret = -1;
-            break;
-        }
-
-
-
-
-
             //if (c % 2 == 0) {
             matrix_fill(0);
             matrix_render_exciter();
@@ -359,7 +347,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 4);
+        usleep(1000000 / 15);
         c++;
     }
 
