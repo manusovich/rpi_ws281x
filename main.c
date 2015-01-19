@@ -181,7 +181,7 @@ void matrix_render_white_and_black(void) {
 //            } else {
                 color = ((ws2811_led_t) 0x000000);
             if (x % 2)  {
-                color = ((ws2811_led_t) 0x333333);
+                color =  ((ws2811_led_t) 0x333333);
 //
             }
 //            }
