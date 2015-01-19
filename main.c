@@ -140,6 +140,16 @@ void matrix_render(void) {
     }
 }
 
+void matrix_render_fill(int color) {
+    int x, y;
+
+    for (x = 0; x < WIDTH; x++) {
+        for (y = 0; y < HEIGHT; y++) {
+            ledstring.channel[0].leds[(y * WIDTH) + x] = (ws2811_led_t) color;
+        }
+    }
+}
+
 void matrix_raise(void) {
     int x, y;
 
@@ -155,10 +165,10 @@ void matrix_render_colors(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-      //  struct RGB target = getRGB(dotcolors[y]);
+        //  struct RGB target = getRGB(dotcolors[y]);
         for (x = 0; x < WIDTH; x++) {
-           // struct RGB rgb = getRGB(matrix[x][y]);
-            ws2811_led_t color =  dotcolors[y];
+            // struct RGB rgb = getRGB(matrix[x][y]);
+            ws2811_led_t color = dotcolors[y];
 
 //                    createRGB(
 //                    abs(target.r - rgb.r) / 2,
@@ -168,6 +178,7 @@ void matrix_render_colors(void) {
         }
     }
 }
+
 
 void matrix_render_white_and_black(void) {
     int x, y;
@@ -179,7 +190,7 @@ void matrix_render_white_and_black(void) {
 //            if (x % 2  == 0) {
 //                color = ((ws2811_led_t) 0x333333);
 //            } else {
-                color = ((ws2811_led_t) 0x000000);
+            color = ((ws2811_led_t) 0x000000);
 //            if (x % 2)  {
 //                color =  ((ws2811_led_t) 0x333333);
 //
@@ -282,12 +293,21 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    long c = 0;
+
     while (1) {
         //matrix_render_exciter();
         //matrix_render_thunderstorm();
-      //  matrix_render_colors();
-        matrix_render_white_and_black();
-        matrix_render();
+        //  matrix_render_colors();
+//        matrix_render_white_and_black();
+//        matrix_render();
+
+        if (c % 2) {
+            matrix_render_fill(0);
+        } else {
+            matrix_render_fill(0xff0000);
+        }
+
 
         if (ws2811_render(&ledstring)) {
             ret = -1;
@@ -296,6 +316,7 @@ int main(int argc, char *argv[]) {
 
         // 15 frames /sec
         usleep(1000000);
+        c++;
     }
 
     ws2811_fini(&ledstring);
