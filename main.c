@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <Foundation/Foundation.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -69,7 +70,7 @@ ws2811_t ledstring =
                                                 .gpionum = GPIO_PIN,
                                                 .count = LED_COUNT,
                                                 .invert = 0,
-                                                .brightness = 55,
+                                                .brightness = 20,
                                         },
                                 [1] =
                                         {
@@ -158,10 +159,12 @@ void matrix_render_colors(void) {
         struct RGB target = getRGB(dotcolors[y]);
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(matrix[x][y]);
-            ws2811_led_t color = createRGB(
-                    abs(target.r - rgb.r) / 2,
-                    abs(target.g - rgb.g) / 2,
-                    abs(target.b = rgb.b) / 2);
+            ws2811_led_t color =  createRGB(target.r, target.g, target.b);
+
+//                    createRGB(
+//                    abs(target.r - rgb.r) / 2,
+//                    abs(target.g - rgb.g) / 2,
+//                    abs(target.b = rgb.b) / 2);
             matrix[x][y] = color;
         }
     }
