@@ -176,11 +176,11 @@ void matrix_render_white_and_black(void) {
         //  struct RGB target = getRGB(dotcolors[y]);
         for (x = 0; x < WIDTH; x++) {
             ws2811_led_t color;
-            if (x % 2  == 0) {
-                color = ((ws2811_led_t) 0x333333);
-            } else {
+//            if (x % 2  == 0) {
+//                color = ((ws2811_led_t) 0x333333);
+//            } else {
                 color = ((ws2811_led_t) 0x000000);
-            }
+//            }
             // struct RGB rgb = getRGB(matrix[x][y]);
 //            ws2811_led_t color =  dotcolors[y];
 //
