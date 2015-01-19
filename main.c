@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         matrix_render_exciter();
         //matrix_render_thunderstorm();
-        matrix_render_colors();
+        //matrix_render_colors();
         matrix_render();
 
         if (ws2811_render(&ledstring)) {
