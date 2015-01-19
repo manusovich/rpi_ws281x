@@ -221,12 +221,9 @@ void matrix_render_exciter(void) {
     int y;
 
     for (y = 0; y < HEIGHT; y++) {
-        struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
+      //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
-        ws2811_led_t color = createRGB(
-                30,
-                30,
-                30);
+        ws2811_led_t color = 0x333333;
         matrix[dotposition[y]][y] = color;
 
         if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
