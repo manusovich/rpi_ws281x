@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <AppKit/AppKit.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -129,6 +130,15 @@ struct RGB getRGB(int hexValue) {
     rgbColor.r = hexValue & 0xff;
     return rgbColor;
 }
+
+ws2811_led_t up(ws2811_led_t color, float m) {
+    struct RGB rgb = getRGB(color);
+    rgb.r = (int) (rgb.r * m);
+    rgb.b = (int) (rgb.b * m);
+    rgb.g = (int) (rgb.g * m);
+    return createRGB(rgb.r, rgb.g, rgb.b);
+}
+
 
 void matrix_render(void) {
     int x, y;
@@ -245,9 +255,11 @@ void matrix_render_exciter(void) {
         int pos = (int) dotposition[y];
         if (pos > (WIDTH - 1)) {
             pos = WIDTH - 1;
+            color = up(color, 1.5);
         }
         if (pos < 0) {
             pos = 0;
+            color = up(color, 1.5);
         }
 
         matrix[pos][y] = color;
