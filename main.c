@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <AppKit/AppKit.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -166,6 +167,20 @@ void matrix_fill(int c) {
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
             matrix[x][y] = (ws2811_led_t) c;
+        }
+    }
+}
+
+void matrix_fade() {
+    int x, y;
+
+    for (y = 0; y < HEIGHT; y++) {
+        for (x = 0; x < WIDTH; x++) {
+            struct RGB rgb = getRGB(matrix[x][y]);
+            rgb.r = rgb.r / 2;
+            rgb.b = rgb.b / 2;
+            rgb.g = rgb.g / 2;
+            matrix[x][y] = rgb;
         }
     }
 }
@@ -326,7 +341,7 @@ int main(int argc, char *argv[]) {
 
 
         //if (c % 2 == 0) {
-        matrix_fill(0);
+        matrix_fade();
         matrix_render_exciter();
         //matrix_render_colors();
         matrix_render();
