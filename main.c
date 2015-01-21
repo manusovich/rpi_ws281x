@@ -462,6 +462,7 @@ int main(int argc, char *argv[]) {
     }
 
     long c = 0;
+    long n = 0;
 
 
     while (1) {
@@ -483,8 +484,8 @@ int main(int argc, char *argv[]) {
         //if (c % 2 == 0) {
         matrix_fade();
         matrix_fill(0);
-        //matrix_render_exciter();
-        matrix_render_number((int) (c % 100));
+        matrix_render_exciter();
+        matrix_render_number((int) (n % 100));
         //matrix_render_colors();
         matrix_render();
 
@@ -498,8 +499,11 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 3);
+        usleep(1000000 / 30);
         c++;
+        if (c % 10 == 0) {
+            n++;
+        }
     }
 
     ws2811_fini(&ledstring);
