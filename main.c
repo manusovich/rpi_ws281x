@@ -177,9 +177,9 @@ void matrix_fade() {
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(matrix[x][y]);
-            rgb.r = rgb.r / 2;
-            rgb.b = rgb.b / 2;
-            rgb.g = rgb.g / 2;
+            rgb.r = (int) (rgb.r / 1.1);
+            rgb.b = (int) (rgb.b / 1.1);
+            rgb.g = (int) (rgb.g / 1.1);
             matrix[x][y] = rgb;
         }
     }
