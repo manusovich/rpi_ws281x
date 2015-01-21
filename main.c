@@ -188,7 +188,7 @@ void matrix_fade() {
             struct RGB rgb = getRGB(matrix[x][y]);
             double d = 1.1;
             if (x == 0 || x == WIDTH) {
-                d = 1.05;
+                d = 1;
             }
             rgb.r = (int) (rgb.r / d);
             rgb.b = (int) (rgb.b / d);
