@@ -293,7 +293,6 @@ void matrix_render_number(void) {
     };
 
 
-
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
@@ -304,11 +303,14 @@ void matrix_render_number(void) {
                     matrix[x][y] = 0xEEEEEE;
                 }
             }
+            if (y > 9 && y < 16) {
+                int pos = (y - 9) * WIDTH + x;
+                if (nums[0][pos] > 0) {
+                    matrix[x][y] = 0xEEEEEE;
+                }
+            }
         }
     }
-
-
-
 }
 
 void matrix_render_thunderstorm() {
