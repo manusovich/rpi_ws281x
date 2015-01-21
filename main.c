@@ -249,11 +249,11 @@ void matrix_render_exciter(void) {
         matrix[pos][y] = color;
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = -((50 + (float) (rand() % 50)) / 100);
+            dotdirection[y] = -((20 + (float) (rand() % 50)) / 100);
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
-            dotdirection[y] = (50 + (float) (rand() % 50)) / 100;
+            dotdirection[y] = (20 + (float) (rand() % 50)) / 100;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
@@ -340,8 +340,8 @@ int main(int argc, char *argv[]) {
 
 
         //if (c % 2 == 0) {
-        matrix_render_exciter();
         matrix_fade();
+        matrix_render_exciter();
         //matrix_render_colors();
         matrix_render();
         //} else {
