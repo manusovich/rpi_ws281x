@@ -179,7 +179,7 @@ void matrix_fade() {
             rgb.r = (int) (rgb.r / 1.1);
             rgb.b = (int) (rgb.b / 1.1);
             rgb.g = (int) (rgb.g / 1.1);
-            matrix[x][y] = rgb;
+            matrix[x][y] = createRGB(rgb.r, rgb.g, rgb.b);
         }
     }
 }
