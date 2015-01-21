@@ -279,7 +279,7 @@ void matrix_render_exciter(void) {
 
 
 void matrix_render_number(void) {
-    int nums[3][18 * 8] = {
+    int nums[4][18 * 8] = {
             {
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
