@@ -303,7 +303,7 @@ void matrix_render_number(void) {
                     matrix[x][y] = 0xEEEEEE;
                 }
             }
-            if (y > 9 && y < 16) {
+            if (y > 6 && y < 14) {
                 int pos = (y - 9) * WIDTH + x;
                 if (nums[0][pos] > 0) {
                     matrix[x][y] = 0xEEEEEE;
