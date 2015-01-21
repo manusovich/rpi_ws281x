@@ -483,7 +483,6 @@ int main(int argc, char *argv[]) {
 
         //if (c % 2 == 0) {
         matrix_fade();
-        matrix_fill(0);
         matrix_render_exciter();
         matrix_render_number((int) (n % 100));
         //matrix_render_colors();
