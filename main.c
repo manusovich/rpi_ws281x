@@ -235,11 +235,11 @@ void matrix_render_exciter(void) {
         matrix[pos][y] = color;
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = -(50 + (float) (rand() % 50) / 100);
+            dotdirection[y] = -((50 + (float) (rand() % 50)) / 100);
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
-            dotdirection[y] = 50 + (float) (rand() % 50) / 100;
+            dotdirection[y] = (50 + (float) (rand() % 50)) / 100;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
