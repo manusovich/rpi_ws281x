@@ -304,7 +304,7 @@ void matrix_render_number(void) {
                 }
             }
             if (y > 7 && y < 14) {
-                int pos = (y - 9) * WIDTH + x;
+                int pos = (y - 7) * WIDTH + x;
                 if (nums[0][pos] > 0) {
                     matrix[x][y] = 0xEEEEEE;
                 }
@@ -372,6 +372,8 @@ int main(int argc, char *argv[]) {
     }
 
     long c = 0;
+
+    matrix_render_fill(0);
 
     while (1) {
         //matrix_render_exciter();
