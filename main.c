@@ -221,9 +221,9 @@ void matrix_render_exciter(void) {
     int y;
 
     for (y = 0; y < HEIGHT; y++) {
-      //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
+        //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
-        ws2811_led_t color =  dotcolors[y];
+        ws2811_led_t color = dotcolors[y];
         matrix[dotposition[y]][y] = color;
 
         if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
@@ -317,29 +317,16 @@ int main(int argc, char *argv[]) {
 
 
 
-        if (c < 6) {
-            if (c % 5 == 0) {
-                matrix_render_fill(0);
-            } else if (c % 5 == 1) {
-                matrix_render_fill(0x110000);
-            } else if (c % 5 == 2) {
-                matrix_render_fill(0x001100);
-            } else if (c % 5 == 3) {
-                matrix_render_fill(0x000011);
-            } else if (c % 5 == 4) {
-                matrix_render_fill(0x111111);
-            }
-        } else {
 
-            //if (c % 2 == 0) {
-            matrix_fill(0);
-            matrix_render_exciter();
-              //matrix_render_colors();
-              matrix_render();
-          //} else {
-          //    matrix_render_fill(0);
-         // }
-        }
+
+        //if (c % 2 == 0) {
+        matrix_fill(0);
+        matrix_render_exciter();
+        //matrix_render_colors();
+        matrix_render();
+        //} else {
+        //    matrix_render_fill(0);
+        // }
 
         if (ws2811_render(&ledstring)) {
             ret = -1;
@@ -347,7 +334,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 30);
+        usleep(1000000 / 60);
         c++;
     }
 
