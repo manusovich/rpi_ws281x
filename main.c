@@ -390,13 +390,13 @@ void matrix_render_number(int num) {
             if (y < 8) {
                 int pos = y * WIDTH + x;
                 if (nums[num % 10][pos] > 0) {
-                    matrix[x][y] = 0xAAAAAA;
+                    matrix[x][y] = 0x777777;
                 }
             }
             if (y > 6 && y < 13) {
                 int pos = (y - 6) * WIDTH + x;
                 if (nums[num / 10][pos] > 0) {
-                    matrix[x][y] = 0xAAAAAA;
+                    matrix[x][y] = 0x777777;
                 }
             }
         }
