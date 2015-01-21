@@ -279,8 +279,9 @@ void matrix_render_exciter(void) {
 
 
 void matrix_render_number(void) {
-    int nums[1][18 * 7] = {
+    int nums[1][18 * 8] = {
             {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
@@ -297,7 +298,7 @@ void matrix_render_number(void) {
 
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
-            if (y < 7) {
+            if (y < 8) {
                 int pos = y * WIDTH + x;
                 if (nums[0][pos] > 0) {
                     matrix[x][y] = 0xEEEEEE;
