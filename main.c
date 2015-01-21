@@ -278,6 +278,48 @@ void matrix_render_exciter(void) {
 }
 
 
+void matrix_render_number(void) {
+    int nums[1][18 * 7] = {
+            {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0,
+
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            }
+    };
+
+
+
+    int x, y;
+
+    for (y = 0; y < HEIGHT; y++) {
+        for (x = 0; x < WIDTH; x++) {
+            int pos = y * WIDTH + x;
+            if (nums[0][pos] > 0) {
+                matrix[x][y] = 0xEEEEEE;
+            }
+        }
+    }
+
+
+
+}
+
 void matrix_render_thunderstorm() {
     int x, y;
 
@@ -357,8 +399,10 @@ int main(int argc, char *argv[]) {
         //if (c % 2 == 0) {
         matrix_fade();
         matrix_render_exciter();
+        matrix_render_number();
         //matrix_render_colors();
         matrix_render();
+
         //} else {
         //    matrix_render_fill(0);
         // }
