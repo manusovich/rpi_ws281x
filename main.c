@@ -309,9 +309,11 @@ void matrix_render_number(void) {
 
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
-            int pos = y * WIDTH + x;
-            if (nums[0][pos] > 0) {
-                matrix[x][y] = 0xEEEEEE;
+            if (y < 7) {
+                int pos = y * WIDTH + x;
+                if (nums[0][pos] > 0) {
+                    matrix[x][y] = 0xEEEEEE;
+                }
             }
         }
     }
