@@ -92,8 +92,8 @@ int thunderstorm[] = {100, 0, 0, 0, 0, 0, 70, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0
 int gthunderstorm[] = {-1, -1, 3, -1, -1, 0, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 
-int dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
-int dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
+float dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
+float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 ws2811_led_t dotcolors[] = // should not be more than 0xDD (!)
         {
@@ -224,14 +224,22 @@ void matrix_render_exciter(void) {
         //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
         ws2811_led_t color = dotcolors[y];
-        matrix[dotposition[y]][y] = color;
-
-        if (dotposition[y] == WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = -1;
+        int pos = (int) dotposition[y];
+        if (pos > (WIDTH - 1)) {
+            pos = WIDTH - 1;
+        }
+        if (pos < 0) {
+            pos = 0;
         }
 
-        if (dotposition[y] == 0 && dotdirection[y] < 0) {
-            dotdirection[y] = 1;
+        matrix[pos][y] = color;
+
+        if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
+            dotdirection[y] = -(float) (rand() % 100) / 100;
+        }
+
+        if (dotposition[y] <= 0 && dotdirection[y] < 0) {
+            dotdirection[y] = (float) (rand() % 100) / 100;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
@@ -313,8 +321,6 @@ int main(int argc, char *argv[]) {
 //            ret = -1;
 //            break;
 //        }
-
-
 
 
 
