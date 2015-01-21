@@ -500,7 +500,7 @@ int main(int argc, char *argv[]) {
         // 15 frames /sec
         usleep(1000000 / 30);
         c++;
-        if (c % 10 == 0) {
+        if (c % 30 == 0) {
             n++;
         }
     }
