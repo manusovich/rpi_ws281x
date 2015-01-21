@@ -255,11 +255,11 @@ void matrix_render_exciter(void) {
         int pos = (int) dotposition[y];
         if (pos >= (WIDTH - 1)) {
             pos = WIDTH - 1;
-            color = up(color, 1.5);
+            color = up(color, 2);
         }
         if (pos <= 0) {
             pos = 0;
-            color = up(color, 1.5);
+            color = up(color, 2);
         }
 
         matrix[pos][y] = color;
