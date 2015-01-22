@@ -494,7 +494,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int i, counter;
+    int  i, counter;
 
     for (counter=1; counter <= 10; counter++)
     {
