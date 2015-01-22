@@ -493,15 +493,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    uint32_t i, counter;
-
-    for (counter=1; counter <= 10; counter++)
-    {
-        i = 0;
-        fread(&i, sizeof i, 1, fp);
-        printf("%d\n",i);
+#define BUFFER_SIZE 12 * sizeof(int)
+    int cnt;
+    unsigned char buffer[BUFFER_SIZE];
+    fread(buffer, sizeof(unsigned char), BUFFER_SIZE, fp);
+    for (cnt = 0; cnt < 12; cnt++) {
+        int pos = (int) (cnt * sizeof(int));
+        int t = buffer[pos] | ((int) buffer[pos + 1] << 8)
+                | ((int) buffer[pos + 2] << 16) | ((int) buffer[pos + 3] << 24);
+        printf("%d\n", t);
     }
-
     fclose(fp);
 
 
