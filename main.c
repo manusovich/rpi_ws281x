@@ -484,8 +484,6 @@ int main(int argc, char *argv[]) {
     long c = 0;
     long n = 0;
 
-    printf("Run app");
-
     FILE *fp;
 
     fp = fopen("/home/pi/rpi_ws281x/forecast", "r"); // read mode
@@ -495,13 +493,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int  i, counter;
+    int i, counter;
 
     for (counter=1; counter <= 10; counter++)
     {
-        printf("Read value \n");
-        fread(&i, sizeof i, 1, fp);
-        usleep(1000000 / 30);
+        i = 0;
+        fread(&i, 4, 1, fp);
         printf("%d\n",i);
     }
 
