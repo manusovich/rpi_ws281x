@@ -502,8 +502,8 @@ int main(int argc, char *argv[]) {
     }
     for (cnt = 0; cnt < 12; cnt++) {
         int pos = (int) (cnt * sizeof(int));
-        int t = buffer[pos] + ((int) buffer[pos + 1] << 8)
-                + ((int) buffer[pos + 2] << 16) + ((int) buffer[pos + 3] << 24);
+        int t = buffer[pos + 3] + ((int) buffer[pos + 2] << 8)
+                + ((int) buffer[pos + 1] << 16) + ((int) buffer[pos] << 24);
         printf("%d\n", t);
     }
     fclose(fp);
