@@ -203,13 +203,13 @@ void matrix_fade() {
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(forecast_color(y));
-            double d = 1.05;
+            double d = 0.9;
             if (x == 0 || x == WIDTH - 1) {
-                d = 1.01;
+                d = 0.95;
             }
-            rgb.r = (int) (rgb.r / d);
-            rgb.b = (int) (rgb.b / d);
-            rgb.g = (int) (rgb.g / d);
+            rgb.r = (int) ((float)rgb.r * d);
+            rgb.b = (int) ((float)rgb.b * d);
+            rgb.g = (int) ((float)rgb.g * d);
             matrix[x][y] = createRGB(rgb.r, rgb.g, rgb.b);
         }
     }
@@ -284,11 +284,9 @@ void matrix_render_exciter(void) {
         int pos = (int) dotposition[y];
         if (pos >= (WIDTH - 1)) {
             pos = WIDTH - 1;
-            color = up(color, 2);
         }
         if (pos <= 0) {
             pos = 0;
-            color = up(color, 2);
         }
 
         matrix[pos][y] = color;
