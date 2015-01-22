@@ -1,23 +1,12 @@
 #!/bin/bash
 
 echo "Kill old instance..."
-sudo pkill test
+pkill test
 echo "Run new instance..."
-sudo /home/pi/rpi_ws281x/test &
+exec /home/pi/rpi_ws281x/test &
 echo "Start pooling for changes"
 
-counter=0
-((counter++))
-
-increase=1
-
 while true; do
-	#if [["$counter" -gt 10]]
-	#then
-		sudo curl https://aladdin-service.herokuapp.com/forecast > /home/pi/rpi_ws281x/forecast
-		counter=0
-#	fi
-
 	cd /home/pi/rpi_ws281x
 	git fetch > build_log.txt 2>&1 
 
@@ -33,9 +22,8 @@ while true; do
 		exec /home/pi/rpi_ws281x/test &
 		echo "Done"
 	else
-   		echo "NO CHANGES ($counter)"
+   		echo "NO CHANGES"
 	fi
 
-	counter = (($counter+1))
 	sleep 10s
 done
