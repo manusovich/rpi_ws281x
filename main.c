@@ -38,6 +38,10 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+#include <AVFoundation/AVFoundation.h>
+#include <Python/Python.h>
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
@@ -110,6 +114,8 @@ ws2811_led_t dotcolors[] =
         };
 
 
+ws2811_led_t getForecastColor(int f);
+
 ws2811_led_t matrix[WIDTH][HEIGHT];
 
 
@@ -174,12 +180,33 @@ void matrix_fill(int c) {
     }
 }
 
+ws2811_led_t forecast_color(int y) {
+    int f = 0;
+    if (y == 0 || y == 1 || y == 2) {
+        f = forecast[0];
+    } else {
+        f = forecast[y - 2];
+    }
+
+    int max = 9999;
+    int min = 3000;
+    int a = max - min;
+    int c = f - min;
+    if (c < 0) {
+        c = 0;
+    }
+
+    int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
+    ws2811_led_t color = up(dotcolors[pos], 0.5);
+    return color;
+}
+
 void matrix_fade() {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
-            struct RGB rgb = getRGB(matrix[x][y]);
+            struct RGB rgb = getRGB(forecast_color(y));
             double d = 1.1;
             if (x == 0 || x == WIDTH - 1) {
                 d = 1.05;
@@ -214,30 +241,7 @@ void matrix_render_forecast(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-//        printf("0. %d\n", y);
-
-        int f = 0;
-        if (y == 0 || y == 1 || y == 2) {
-            f = forecast[0];
-        } else {
-            f = forecast[y - 2];
-        }
-
-//        printf("1. %d - %d\n", y, f);
-
-        int max = 9999;
-        int min = 3000;
-        int a = max - min;
-        int c = f - min;
-        if (c < 0) {
-            c = 0;
-        }
-
-        int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
-//        printf("2. %d - %d\n", y, pos);
-
-        ws2811_led_t color = up(dotcolors[pos], 0.5);
-
+        ws2811_led_t color = forecast_color(y);
         for (x = 0; x < WIDTH; x++) {
             matrix[x][y] = color;
         }
@@ -279,7 +283,8 @@ void matrix_render_exciter(void) {
     for (y = 0; y < HEIGHT; y++) {
         //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
-        ws2811_led_t color = up(dotcolors[y], 0.5);
+        ws2811_led_t color = up(forecast_color(y), 0.5);
+
         int pos = (int) dotposition[y];
         if (pos >= (WIDTH - 1)) {
             pos = WIDTH - 1;
@@ -517,6 +522,8 @@ int main(int argc, char *argv[]) {
 
     printf("Run loopd\n");
 
+    matrix_render_forecast();
+
     while (1) {
         //matrix_render_exciter();
         //matrix_render_thunderstorm();
@@ -534,11 +541,10 @@ int main(int argc, char *argv[]) {
 
 
         //if (c % 2 == 0) {
-//        matrix_fade();
-        //    matrix_render_exciter();
+        matrix_fade();
+        matrix_render_exciter();
         //  matrix_render_number((int) (n % 100));
         //matrix_render_colors();
-        matrix_render_forecast();
         matrix_render();
 
         //} else {
