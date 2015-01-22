@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <Foundation/Foundation.h>
 
 #include "clk.h"
 #include "gpio.h"
@@ -96,23 +97,18 @@ float dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-ws2811_led_t dotcolors[] = // should not be more than 0xDD (!)
+
+ws2811_led_t dotcolors[] =
         {
-                0x600000,  // red 0
-                0x603000,  // orange 1
-                0x006000,  // green 2
-                0x606000,  // yellow 3
-                0x006000,  // green 4
-                0x006060,  // lightblue 5
-                0x000060,  // blue 6
-                0x300030,  // purple 7
-                0x600030,  // pink 8
-                0x300030,  // purple 7
-                0x000060,  // blue 6
-                0x006000,  // green 4
-                0x606000,  // yellow 3
-                0x603000,  // orange 1
-                0x600000,  // red 0
+                0x8000FF,
+                0x0000FF,
+                0x0080FF,
+                0x00FFFF,
+                0x00FF00,
+                0xBFFF00,
+                0xFFFF00,
+                0xFF8000,
+                0xFF0000
         };
 
 
@@ -220,15 +216,26 @@ void matrix_render_forecast(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-        //  struct RGB target = getRGB(dotcolors[y]);
-        for (x = 0; x < WIDTH; x++) {
-            // struct RGB rgb = getRGB(matrix[x][y]);
-            ws2811_led_t color = dotcolors[y];
 
-//                    createRGB(
-//                    abs(target.r - rgb.r) / 2,
-//                    abs(target.g - rgb.g) / 2,
-//                    abs(target.b = rgb.b) / 2);
+        int f = 0;
+        if (y == 0 || y == 1) {
+            f = forecast[0];
+        } else {
+            f = forecast[y - 1];
+        }
+
+        int max = 9999;
+        int min = 3000;
+        int a = max - min;
+        int c = f - min;
+        if (c < 0) {
+            c = 0;
+        }
+
+        int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
+        ws2811_led_t color = up(dotcolors[pos], 0.5);
+
+        for (x = 0; x < WIDTH; x++) {
             matrix[x][y] = color;
         }
     }
@@ -497,14 +504,11 @@ int main(int argc, char *argv[]) {
     int cnt;
     unsigned char buffer[BUFFER_SIZE];
     fread(buffer, 1, BUFFER_SIZE, fp);
-    for (c = 0; c < BUFFER_SIZE; c++) {
-        printf("%d\n", (int) buffer[c]);
-    }
     for (cnt = 0; cnt < 12; cnt++) {
         int pos = (int) (cnt * sizeof(int));
-        int t = buffer[pos + 3] + ((int) buffer[pos + 2] << 8)
+        forecast[cnt] = buffer[pos + 3] + ((int) buffer[pos + 2] << 8)
                 + ((int) buffer[pos + 1] << 16) + ((int) buffer[pos] << 24);
-        printf("%d\n", t);
+        printf("%d\n", forecast[cnt]);
     }
     fclose(fp);
 
@@ -526,10 +530,11 @@ int main(int argc, char *argv[]) {
 
 
         //if (c % 2 == 0) {
-        matrix_fade();
+//        matrix_fade();
         //    matrix_render_exciter();
         //  matrix_render_number((int) (n % 100));
         //matrix_render_colors();
+        matrix_render_forecast();
         matrix_render();
 
         //} else {
