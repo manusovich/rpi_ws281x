@@ -500,7 +500,7 @@ int main(int argc, char *argv[]) {
     {
         fread(&i, sizeof i, 1, fp);
         usleep(1000000 / 30);
-        // printf("%d\n",i);
+        printf("%d\n",i);
     }
 
     fclose(fp);
