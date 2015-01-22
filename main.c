@@ -498,6 +498,7 @@ int main(int argc, char *argv[]) {
 
     for (counter=1; counter <= 10; counter++)
     {
+        printf("Read value \n");
         fread(&i, sizeof i, 1, fp);
         usleep(1000000 / 30);
         printf("%d\n",i);
