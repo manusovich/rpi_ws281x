@@ -499,7 +499,8 @@ int main(int argc, char *argv[]) {
     for ( int counter=1; counter <= 10; counter++)
     {
         fread(&i, sizeof i, 1, fp);
-        printf("%d\n",i);
+        usleep(1000000 / 30);
+        // printf("%d\n",i);
     }
 
     fclose(fp);
