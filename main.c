@@ -551,7 +551,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(5000000);
+        usleep(1000000 / 15);
         c++;
         if (c % 50 == 0) {
             n++;
