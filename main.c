@@ -494,9 +494,9 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int i;
+    int i, counter;
 
-    for ( int counter=1; counter <= 10; counter++)
+    for (counter=1; counter <= 10; counter++)
     {
         fread(&i, sizeof i, 1, fp);
         usleep(1000000 / 30);
