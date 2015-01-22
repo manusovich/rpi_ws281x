@@ -496,8 +496,11 @@ int main(int argc, char *argv[]) {
 
     int i;
 
-    while (fread(&i, sizeof i, 1, fp) != EOF)
-        printf("%d", i);
+    for ( int counter=1; counter <= 10; counter++)
+    {
+        fread(&i, sizeof i, 1, fp);
+        printf("%d\n",i);
+    }
 
     fclose(fp);
 
