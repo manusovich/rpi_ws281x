@@ -214,16 +214,16 @@ void matrix_render_forecast(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
-        printf("0. %d\n", y);
+//        printf("0. %d\n", y);
 
         int f = 0;
-        if (y == 0 || y == 1) {
+        if (y == 0 || y == 1 || y == 2) {
             f = forecast[0];
         } else {
-            f = forecast[y - 1];
+            f = forecast[y - 2];
         }
 
-        printf("1. %d - %d\n", y, f);
+//        printf("1. %d - %d\n", y, f);
 
         int max = 9999;
         int min = 3000;
@@ -234,7 +234,7 @@ void matrix_render_forecast(void) {
         }
 
         int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
-        printf("2. %d - %d\n", y, pos);
+//        printf("2. %d - %d\n", y, pos);
 
         ws2811_led_t color = up(dotcolors[pos], 0.5);
 
