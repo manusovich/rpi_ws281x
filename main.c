@@ -193,7 +193,7 @@ ws2811_led_t forecast_color(int y) {
     }
 
     int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
-    ws2811_led_t color = up(dotcolors[pos], 0.5);
+    ws2811_led_t color = up(dotcolors[pos], 0.3);
     return color;
 }
 
@@ -203,9 +203,9 @@ void matrix_fade() {
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(forecast_color(y));
-            double d = 1.1;
+            double d = 1.05;
             if (x == 0 || x == WIDTH - 1) {
-                d = 1.05;
+                d = 1.01;
             }
             rgb.r = (int) (rgb.r / d);
             rgb.b = (int) (rgb.b / d);
