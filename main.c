@@ -279,7 +279,7 @@ void matrix_render_exciter(void) {
     for (y = 0; y < HEIGHT; y++) {
         //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
 
-        ws2811_led_t color = up(forecast_color(y), 1.5);
+        ws2811_led_t color = up(forecast_color(y), 2);
 
         int pos = (int) dotposition[y];
         if (pos >= (WIDTH - 1)) {
@@ -294,11 +294,11 @@ void matrix_render_exciter(void) {
         matrix[pos][y] = color;
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = -((20 + (float) (rand() % 50)) / 100);
+            dotdirection[y] = -((40 + (float) (rand() % 20)) / 100);
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
-            dotdirection[y] = (20 + (float) (rand() % 50)) / 100;
+            dotdirection[y] = (40 + (float) (rand() % 20)) / 100;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
