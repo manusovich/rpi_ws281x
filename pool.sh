@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Read forecast"
+curl https://aladdin-service.herokuapp.com/forecast > /home/pi/rpi_ws281x/forecast
 echo "Kill old instance..."
 pkill test
 echo "Run new instance..."
