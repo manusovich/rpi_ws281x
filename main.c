@@ -441,8 +441,8 @@ int main(int argc, char *argv[]) {
     matrix_render_forecast();
 
     while (1) {
-       // matrix_fade();
-       // matrix_render_exciter();
+        matrix_fade();
+        matrix_render_exciter();
         matrix_render();
 
         if (ws2811_render(&ledstring)) {
