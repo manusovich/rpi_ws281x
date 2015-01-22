@@ -216,6 +216,7 @@ void matrix_render_forecast(void) {
     int x, y;
 
     for (y = 0; y < HEIGHT; y++) {
+        printf("0. %d\n", y);
 
         int f = 0;
         if (y == 0 || y == 1) {
@@ -516,6 +517,7 @@ int main(int argc, char *argv[]) {
     }
     fclose(fp);
 
+    printf("Run loopd\n");
 
     while (1) {
         //matrix_render_exciter();
