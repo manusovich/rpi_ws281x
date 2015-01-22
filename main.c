@@ -496,7 +496,7 @@ int main(int argc, char *argv[]) {
 #define BUFFER_SIZE 12 * sizeof(int)
 //    int cnt;
     unsigned char buffer[BUFFER_SIZE];
-    fread(buffer, sizeof(unsigned char), BUFFER_SIZE, fp);
+    fread(buffer, 1, BUFFER_SIZE, fp);
     for (c = 0; c < BUFFER_SIZE; c++) {
         printf("%d\n", c);
     }
