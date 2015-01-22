@@ -224,6 +224,8 @@ void matrix_render_forecast(void) {
             f = forecast[y - 1];
         }
 
+        printf("1. %d - %d\n", y, f);
+
         int max = 9999;
         int min = 3000;
         int a = max - min;
@@ -233,6 +235,8 @@ void matrix_render_forecast(void) {
         }
 
         int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
+        printf("2. %d - %d\n", y, pos);
+
         ws2811_led_t color = up(dotcolors[pos], 0.5);
 
         for (x = 0; x < WIDTH; x++) {
@@ -547,7 +551,7 @@ int main(int argc, char *argv[]) {
         }
 
         // 15 frames /sec
-        usleep(1000000 / 30);
+        usleep(5000000);
         c++;
         if (c % 50 == 0) {
             n++;
