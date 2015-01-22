@@ -493,12 +493,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int i, counter;
+    uint32_t i, counter;
 
     for (counter=1; counter <= 10; counter++)
     {
         i = 0;
-        fread(&i, 4, 1, fp);
+        fread(&i, sizeof i, 1, fp);
         printf("%d\n",i);
     }
 
