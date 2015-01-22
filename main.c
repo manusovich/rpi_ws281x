@@ -86,6 +86,12 @@ struct RGB {
     int b;
 };
 
+struct XRGB {
+    float r;
+    float g;
+    float b;
+};
+
 // thunderstorm20, 10, 0,
 int thunderstorm[] = {100, 0, 0, 0, 0, 0, 70, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 30, 10, 0, 0, 0, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // %
 int gthunderstorm[] = {-1, -1, 3, -1, -1, 0, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -109,11 +115,7 @@ ws2811_led_t dotcolors[] =
                 0xFF0000
         };
 
-
-ws2811_led_t getForecastColor(int f);
-
-ws2811_led_t matrix[WIDTH][HEIGHT];
-
+struct XRGB matrix[WIDTH][HEIGHT];
 
 ws2811_led_t createRGB(int r, int g, int b) {
     return (ws2811_led_t) (((g & 0xff) << 16) + ((b & 0xff) << 8) + (r & 0xff));
@@ -121,6 +123,14 @@ ws2811_led_t createRGB(int r, int g, int b) {
 
 struct RGB getRGB(int hexValue) {
     struct RGB rgbColor;
+    rgbColor.g = (hexValue >> 16) & 0xff;
+    rgbColor.b = (hexValue >> 8) & 0xff;
+    rgbColor.r = hexValue & 0xff;
+    return rgbColor;
+}
+
+struct XRGB getXRGB(int hexValue) {
+    struct XRGB rgbColor;
     rgbColor.g = (hexValue >> 16) & 0xff;
     rgbColor.b = (hexValue >> 8) & 0xff;
     rgbColor.r = hexValue & 0xff;
@@ -141,40 +151,41 @@ void matrix_render(void) {
 
     for (x = 0; x < WIDTH; x++) {
         for (y = 0; y < HEIGHT; y++) {
-            ledstring.channel[0].leds[(y * WIDTH) + x] = matrix[x][y];
+            struct XRGB xrgb = matrix[x][y];
+            ledstring.channel[0].leds[(y * WIDTH) + x] = createRGB((int) xrgb.r, (int) xrgb.g, (int) xrgb.b);
         }
     }
 }
 
-void matrix_render_fill(int color) {
-    int x, y;
-
-    for (x = 0; x < WIDTH; x++) {
-        for (y = 0; y < HEIGHT; y++) {
-            ledstring.channel[0].leds[(y * WIDTH) + x] = (ws2811_led_t) color;
-        }
-    }
-}
-
-void matrix_raise(void) {
-    int x, y;
-
-    for (y = 0; y < (HEIGHT - 1); y++) {
-        for (x = 0; x < WIDTH; x++) {
-            matrix[x][y] = matrix[x][y + 1];
-        }
-    }
-}
-
-void matrix_fill(int c) {
-    int x, y;
-
-    for (y = 0; y < HEIGHT; y++) {
-        for (x = 0; x < WIDTH; x++) {
-            matrix[x][y] = (ws2811_led_t) c;
-        }
-    }
-}
+//void matrix_render_fill(int color) {
+//    int x, y;
+//
+//    for (x = 0; x < WIDTH; x++) {
+//        for (y = 0; y < HEIGHT; y++) {
+//            ledstring.channel[0].leds[(y * WIDTH) + x] = (ws2811_led_t) color;
+//        }
+//    }
+//}
+//
+//void matrix_raise(void) {
+//    int x, y;
+//
+//    for (y = 0; y < (HEIGHT - 1); y++) {
+//        for (x = 0; x < WIDTH; x++) {
+//            matrix[x][y] = matrix[x][y + 1];
+//        }
+//    }
+//}
+//
+//void matrix_fill(int c) {
+//    int x, y;
+//
+//    for (y = 0; y < HEIGHT; y++) {
+//        for (x = 0; x < WIDTH; x++) {
+//            matrix[x][y] = (ws2811_led_t) c;
+//        }
+//    }
+//}
 
 ws2811_led_t forecast_color(int y) {
     int f = 0;
@@ -203,14 +214,17 @@ void matrix_fade() {
     for (y = 0; y < HEIGHT; y++) {
         for (x = 0; x < WIDTH; x++) {
             struct RGB rgb = getRGB(forecast_color(y));
+            struct XRGB xrgb = matrix[x][y];
+
             double d = 0.9;
-            if (x == 0 || x == WIDTH - 1) {
-                d = 0.95;
+
+            if (xrgb.r > rgb.r) {
+                xrgb.r = (float) (xrgb.r * d);
+                xrgb.g = (float) (xrgb.g * d);
+                xrgb.b = (float) (xrgb.b * d);
             }
-            rgb.r = (int) ((float)rgb.r * d);
-            rgb.b = (int) ((float)rgb.b * d);
-            rgb.g = (int) ((float)rgb.g * d);
-            matrix[x][y] = createRGB(rgb.r, rgb.g, rgb.b);
+
+            matrix[x][y] = xrgb;
         }
     }
 }
@@ -245,41 +259,39 @@ void matrix_render_forecast(void) {
 }
 
 
-void matrix_render_white_and_black(void) {
-    int x, y;
-
-    for (y = 0; y < HEIGHT; y++) {
-        //  struct RGB target = getRGB(dotcolors[y]);
-        for (x = 0; x < WIDTH; x++) {
-            ws2811_led_t color;
-//            if (x % 2  == 0) {
-//                color = ((ws2811_led_t) 0x333333);
-//            } else {
-            color = ((ws2811_led_t) 0x000000);
-//            if (x % 2)  {
-//                color =  ((ws2811_led_t) 0x333333);
+//void matrix_render_white_and_black(void) {
+//    int x, y;
 //
-//            }
-//            }
-            // struct RGB rgb = getRGB(matrix[x][y]);
-//            ws2811_led_t color =  dotcolors[y];
-//
-//                    createRGB(
-//                    abs(target.r - rgb.r) / 2,
-//                    abs(target.g - rgb.g) / 2,
-//                    abs(target.b = rgb.b) / 2);
-            matrix[x][y] = color;
-        }
-    }
-}
+//    for (y = 0; y < HEIGHT; y++) {
+//        //  struct RGB target = getRGB(dotcolors[y]);
+//        for (x = 0; x < WIDTH; x++) {
+//            ws2811_led_t color;
+////            if (x % 2  == 0) {
+////                color = ((ws2811_led_t) 0x333333);
+////            } else {
+//            color = ((ws2811_led_t) 0x000000);
+////            if (x % 2)  {
+////                color =  ((ws2811_led_t) 0x333333);
+////
+////            }
+////            }
+//            // struct RGB rgb = getRGB(matrix[x][y]);
+////            ws2811_led_t color =  dotcolors[y];
+////
+////                    createRGB(
+////                    abs(target.r - rgb.r) / 2,
+////                    abs(target.g - rgb.g) / 2,
+////                    abs(target.b = rgb.b) / 2);
+//            matrix[x][y] = color;
+//        }
+//    }
+//}
 
 void matrix_render_exciter(void) {
     int y;
 
     for (y = 0; y < HEIGHT; y++) {
         //  struct RGB rgb = getRGB(matrix[dotposition[y]][y]);
-
-        ws2811_led_t color = up(forecast_color(y), 2);
 
         int pos = (int) dotposition[y];
         if (pos >= (WIDTH - 1)) {
@@ -289,7 +301,7 @@ void matrix_render_exciter(void) {
             pos = 0;
         }
 
-        matrix[pos][y] = color;
+        matrix[pos][y] = getXRGB(up(forecast_color(y), 2));
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
             dotdirection[y] = -((60 + (float) (rand() % 20)) / 100);
@@ -306,193 +318,169 @@ void matrix_render_exciter(void) {
 }
 
 
-void matrix_render_number(int num) {
-    int nums[10][18 * 8] = {
-            {//0
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//1
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//2
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//3
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//4
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//5
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//6
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//7
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//8
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            },
-            {//9
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
-                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            }
-    };
+//void matrix_render_number(int num) {
+//    int nums[10][18 * 8] = {
+//            {//0
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//1
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//2
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//3
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//4
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//5
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//6
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//7
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//8
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            },
+//            {//9
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0,
+//                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//            }
+//    };
+//
+//
+//    int x, y;
+//
+//    for (y = 0; y < HEIGHT; y++) {
+//        for (x = 0; x < WIDTH; x++) {
+//            if (y < 8) {
+//                int pos = y * WIDTH + x;
+//                if (nums[num % 10][pos] > 0) {
+//                    matrix[x][y] = 0x777777;
+//                }
+//            }
+//            if (y > 6 && y < 13) {
+//                int pos = (y - 6) * WIDTH + x;
+//                if (nums[num / 10][pos] > 0) {
+//                    matrix[x][y] = 0x777777;
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//void matrix_render_thunderstorm() {
+//    int x, y;
+//
+//    for (y = 0; y < HEIGHT; y++) {
+//        if (gthunderstorm[y] >= 0) {
+//            int intensity = thunderstorm[gthunderstorm[y]];
+//            struct RGB rgb = getRGB(dotcolors[y]);
+//            ws2811_led_t color = createRGB(
+//                    rgb.r + (int) ((double) 0x20 / 100 * intensity),
+//                    rgb.g + (int) ((double) 0x20 / 100 * intensity),
+//                    rgb.b + (int) ((double) 0x20 / 100 * intensity));
+//            for (x = 0; x < WIDTH; x++) {
+//                matrix[x][y] = color;
+//            }
+//            gthunderstorm[y]++;
+//            if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
+//                gthunderstorm[y] = 0;
+//            }
+//        }
+//    }
+//}
 
 
-    int x, y;
-
-    for (y = 0; y < HEIGHT; y++) {
-        for (x = 0; x < WIDTH; x++) {
-            if (y < 8) {
-                int pos = y * WIDTH + x;
-                if (nums[num % 10][pos] > 0) {
-                    matrix[x][y] = 0x777777;
-                }
-            }
-            if (y > 6 && y < 13) {
-                int pos = (y - 6) * WIDTH + x;
-                if (nums[num / 10][pos] > 0) {
-                    matrix[x][y] = 0x777777;
-                }
-            }
-        }
-    }
-}
-
-void matrix_render_thunderstorm() {
-    int x, y;
-
-    for (y = 0; y < HEIGHT; y++) {
-        if (gthunderstorm[y] >= 0) {
-            int intensity = thunderstorm[gthunderstorm[y]];
-            struct RGB rgb = getRGB(dotcolors[y]);
-            ws2811_led_t color = createRGB(
-                    rgb.r + (int) ((double) 0x20 / 100 * intensity),
-                    rgb.g + (int) ((double) 0x20 / 100 * intensity),
-                    rgb.b + (int) ((double) 0x20 / 100 * intensity));
-            for (x = 0; x < WIDTH; x++) {
-                matrix[x][y] = color;
-            }
-            gthunderstorm[y]++;
-            if (gthunderstorm[y] == ARRAY_SIZE(thunderstorm)) {
-                gthunderstorm[y] = 0;
-            }
-        }
-    }
-}
+//void matrix_bottom(void) {
+//    int i;
+//
+//    for (i = 0; i < ARRAY_SIZE(dotspos); i++) {
+//        dotspos[i]++;
+//        if (dotspos[i] > (WIDTH - 1)) {
+//            dotspos[i] = 0;
+//        }
+//
+//        matrix[dotspos[i]][HEIGHT - 1] = dotcolors[i];
+//    }
+//}
 
 
-void matrix_bottom(void) {
-    int i;
-
-    for (i = 0; i < ARRAY_SIZE(dotspos); i++) {
-        dotspos[i]++;
-        if (dotspos[i] > (WIDTH - 1)) {
-            dotspos[i] = 0;
-        }
-
-        matrix[dotspos[i]][HEIGHT - 1] = dotcolors[i];
-    }
-}
-
-static void ctrl_c_handler(int signum) {
-    ws2811_fini(&ledstring);
-}
-
-static void setup_handlers(void) {
-    struct sigaction sa =
-            {
-                    .sa_handler = ctrl_c_handler,
-            };
-
-    sigaction(SIGKILL, &sa, NULL);
-}
-
-
-int main(int argc, char *argv[]) {
-    int ret = 0;
-
-    setup_handlers();
-
-    if (ws2811_init(&ledstring)) {
-        return -1;
-    }
-
-    long c = 0;
-    long n = 0;
-
+void update_forecast(void) {
     FILE *fp;
 
     fp = fopen("/home/pi/rpi_ws281x/forecast", "r"); // read mode
@@ -513,51 +501,62 @@ int main(int argc, char *argv[]) {
         printf("%d\n", forecast[cnt]);
     }
     fclose(fp);
+}
+
+static void ctrl_c_handler(int signum) {
+    ws2811_fini(&ledstring);
+}
+
+static void setup_handlers(void) {
+    struct sigaction sa =
+            {
+                    .sa_handler = ctrl_c_handler,
+            };
+
+    sigaction(SIGKILL, &sa, NULL);
+}
+
+
+int main(int argc, char *argv[]) {
+    // 15 frames /sec
+    int frames_per_second = 15;
+
+
+    int ret = 0;
+
+    setup_handlers();
+
+    if (ws2811_init(&ledstring)) {
+        return -1;
+    }
+
+    long c = 0;
+
+    update_forecast();
 
     printf("Run loopd\n");
 
     matrix_render_forecast();
 
     while (1) {
-        //matrix_render_exciter();
-        //matrix_render_thunderstorm();
-        //  matrix_render_colors();
-//        matrix_render_white_and_black();
-
-//        matrix_render_fill(0);
-
-//        if (ws2811_render(&ledstring)) {
-//            ret = -1;
-//            break;
-//        }
-
-
-
-
-        //if (c % 2 == 0) {
         matrix_fade();
         matrix_render_exciter();
-        //  matrix_render_number((int) (n % 100));
-        //matrix_render_colors();
         matrix_render();
-
-        //} else {
-        //    matrix_render_fill(0);
-        // }
 
         if (ws2811_render(&ledstring)) {
             ret = -1;
             break;
         }
 
-        // 15 frames /sec
-        usleep(1000000 / 15);
+        usleep((useconds_t) (1000000 / frames_per_second));
+
         c++;
-        if (c % 50 == 0) {
-            n++;
+
+        if (c % (frames_per_second * 60 * 10) == 0) {
+            // each 10 minutes update forecast
+            update_forecast();
         }
     }
-
     ws2811_fini(&ledstring);
 
     return ret;
