@@ -498,7 +498,7 @@ int main(int argc, char *argv[]) {
     unsigned char buffer[BUFFER_SIZE];
     fread(buffer, 1, BUFFER_SIZE, fp);
     for (c = 0; c < BUFFER_SIZE; c++) {
-        printf("%d\n", (int) c);
+        printf("%d\n", (int) buffer[c]);
     }
 //    for (cnt = 0; cnt < 12; cnt++) {
 //        int pos = (int) (cnt * sizeof(int));
