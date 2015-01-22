@@ -484,6 +484,7 @@ int main(int argc, char *argv[]) {
     long c = 0;
     long n = 0;
 
+    printf("Run app");
 
     FILE *fp;
 
