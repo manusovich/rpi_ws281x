@@ -92,15 +92,9 @@ struct XRGB {
     float b;
 };
 
-// thunderstorm20, 10, 0,
-int thunderstorm[] = {100, 0, 0, 0, 0, 0, 70, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 30, 10, 0, 0, 0, 0, 100, 70, 50, 30, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // %
-int gthunderstorm[] = {-1, -1, 3, -1, -1, 0, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-
-
 float dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int dotspos[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
 ws2811_led_t dotcolors[] =
         {
@@ -157,36 +151,6 @@ void matrix_render(void) {
     }
 }
 
-//void matrix_render_fill(int color) {
-//    int x, y;
-//
-//    for (x = 0; x < WIDTH; x++) {
-//        for (y = 0; y < HEIGHT; y++) {
-//            ledstring.channel[0].leds[(y * WIDTH) + x] = (ws2811_led_t) color;
-//        }
-//    }
-//}
-//
-//void matrix_raise(void) {
-//    int x, y;
-//
-//    for (y = 0; y < (HEIGHT - 1); y++) {
-//        for (x = 0; x < WIDTH; x++) {
-//            matrix[x][y] = matrix[x][y + 1];
-//        }
-//    }
-//}
-//
-//void matrix_fill(int c) {
-//    int x, y;
-//
-//    for (y = 0; y < HEIGHT; y++) {
-//        for (x = 0; x < WIDTH; x++) {
-//            matrix[x][y] = (ws2811_led_t) c;
-//        }
-//    }
-//}
-
 ws2811_led_t forecast_color(int y) {
     int f = 0;
     if (y == 0 || y == 1 || y == 2) {
@@ -216,7 +180,7 @@ void matrix_fade() {
             struct RGB rgb = getRGB(forecast_color(y));
             struct XRGB xrgb = matrix[x][y];
 
-            double d = 0.9;
+            double d = 0.98;
 
             if (xrgb.r > rgb.r) {
                 xrgb.r = (float) (xrgb.r * d);
@@ -229,24 +193,6 @@ void matrix_fade() {
     }
 }
 
-//void matrix_render_colors(void) {
-//    int x, y;
-//
-//    for (y = 0; y < HEIGHT; y++) {
-//        //  struct RGB target = getRGB(dotcolors[y]);
-//        for (x = 0; x < WIDTH; x++) {
-//            // struct RGB rgb = getRGB(matrix[x][y]);
-//            ws2811_led_t color = dotcolors[y];
-//
-////                    createRGB(
-////                    abs(target.r - rgb.r) / 2,
-////                    abs(target.g - rgb.g) / 2,
-////                    abs(target.b = rgb.b) / 2);
-//            matrix[x][y] = color;
-//        }
-//    }
-//}
-
 void matrix_render_forecast(void) {
     int x, y;
 
@@ -257,35 +203,6 @@ void matrix_render_forecast(void) {
         }
     }
 }
-
-
-//void matrix_render_white_and_black(void) {
-//    int x, y;
-//
-//    for (y = 0; y < HEIGHT; y++) {
-//        //  struct RGB target = getRGB(dotcolors[y]);
-//        for (x = 0; x < WIDTH; x++) {
-//            ws2811_led_t color;
-////            if (x % 2  == 0) {
-////                color = ((ws2811_led_t) 0x333333);
-////            } else {
-//            color = ((ws2811_led_t) 0x000000);
-////            if (x % 2)  {
-////                color =  ((ws2811_led_t) 0x333333);
-////
-////            }
-////            }
-//            // struct RGB rgb = getRGB(matrix[x][y]);
-////            ws2811_led_t color =  dotcolors[y];
-////
-////                    createRGB(
-////                    abs(target.r - rgb.r) / 2,
-////                    abs(target.g - rgb.g) / 2,
-////                    abs(target.b = rgb.b) / 2);
-//            matrix[x][y] = color;
-//        }
-//    }
-//}
 
 void matrix_render_exciter(void) {
     int y;
@@ -464,21 +381,6 @@ void matrix_render_exciter(void) {
 //        }
 //    }
 //}
-
-
-//void matrix_bottom(void) {
-//    int i;
-//
-//    for (i = 0; i < ARRAY_SIZE(dotspos); i++) {
-//        dotspos[i]++;
-//        if (dotspos[i] > (WIDTH - 1)) {
-//            dotspos[i] = 0;
-//        }
-//
-//        matrix[dotspos[i]][HEIGHT - 1] = dotcolors[i];
-//    }
-//}
-
 
 void update_forecast(void) {
     FILE *fp;
