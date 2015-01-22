@@ -38,10 +38,6 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
-#include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
-#include <AVFoundation/AVFoundation.h>
-#include <Python/Python.h>
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
