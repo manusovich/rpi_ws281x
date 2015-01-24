@@ -98,15 +98,9 @@ int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 ws2811_led_t dotcolors[] =
         {
-                0x8000FF,
-                0x0000FF,
-                0x0080FF,
-                0x00FFFF,
-                0x00FF00,
-                0xBFFF00,
-                0xFFFF00,
-                0xFF8000,
-                0xFF0000
+                0x882D61, 0x6F256F, 0x582A72, 0x4B2D73, 0x403075, 0x343477, 0x2E4272, 0x29506D, 0x226666,
+                0x277553, 0x2D882D, 0x609732, 0x7B9F35, 0x91A437, 0xAAAA39, 0xAAA039, 0xAA9739, 0xAA8E39,
+                0xAA8439, 0xAA7939, 0xAA6C39, 0xAA5939, 0xAA3939
         };
 
 struct XRGB matrix[WIDTH][HEIGHT];
