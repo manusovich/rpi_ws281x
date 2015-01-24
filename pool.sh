@@ -12,6 +12,9 @@ echo "Start pooling for changes"
 C=0
 N=0
 while true; do
+    C=$((C+1))
+    N=$((C%180))
+
 	cd /home/pi/rpi_ws281x
 	git fetch > build_log.txt 2>&1 
 
@@ -33,10 +36,8 @@ while true; do
     if [ $N -eq 0 ]
     then
         echo "Update forecast "
-        sh /home/pi/rpi_ws281x/forecast.sh
+        curl https://aladdin-service.herokuapp.com/forecast > /home/pi/rpi_ws281x/forecast
     fi
 
-    C=$((C+1))
-    N=$((C%180))
 	sleep 10s
 done
