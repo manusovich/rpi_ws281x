@@ -235,7 +235,8 @@ void matrix_render_precip(void) {
             p = 15;
         }
         if (p > 0) {
-            for (int k = 0; k < p; k++) {
+            int k;
+            for (k = 0; k < p; k++) {
                 matrix[1 + rand() % 18][y] = getXRGB(0x000000);
             }
         }
