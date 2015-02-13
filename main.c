@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <AppKit/AppKit.h>
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
@@ -236,11 +237,8 @@ void matrix_render_precip(int frame) {
     int y;
     for (y = 0; y < HEIGHT; y++) {
         int p = precip[y];
-        if (p > 100) {
-            p = 100;
-        }
-        p = 100 - p;
-        if (frame % (p / 2) == 0) {
+        int k;
+        for (k = 0; k < p % 20; k++) {
             matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .01));
         }
     }
