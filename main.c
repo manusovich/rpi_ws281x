@@ -236,12 +236,12 @@ void matrix_render_precip(int frame) {
     int y;
     for (y = 0; y < HEIGHT; y++) {
         int p = precip[y];
-        if (p > 200) {
-            p = 200;
+        if (p > 100) {
+            p = 100;
         }
-        p = 200 - p;
+        p = 100 - p;
         if (frame % p == 0) {
-            matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .5));
+            matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .1));
         }
     }
 }
