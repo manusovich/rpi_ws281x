@@ -95,6 +95,8 @@ struct XRGB {
 float dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int precip[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 ws2811_led_t dotcolors[] =
         {
@@ -378,23 +380,24 @@ void matrix_render_exciter(void) {
 
 void update_forecast(void) {
     FILE *fp;
-
-    fp = fopen("/home/pi/rpi_ws281x/forecast", "r"); // read mode
-
+    fp = fopen("/home/pi/rpi_ws281x/forecast", "r");
     if (fp == NULL) {
         perror("Error while opening the file.\n");
         exit(EXIT_FAILURE);
     }
 
-#define BUFFER_SIZE 12 * sizeof(int)
     int cnt;
+    #define BUFFER_SIZE 12 * 3 * sizeof(int)
     unsigned char buffer[BUFFER_SIZE];
     fread(buffer, 1, BUFFER_SIZE, fp);
     for (cnt = 0; cnt < 12; cnt++) {
-        int pos = (int) (cnt * sizeof(int));
+        int pos = (int) (cnt * 3 * sizeof(int));
         forecast[cnt] = buffer[pos + 3] + ((int) buffer[pos + 2] << 8)
                 + ((int) buffer[pos + 1] << 16) + ((int) buffer[pos] << 24);
-        printf("%d\n", forecast[cnt]);
+        wind[cnt] = buffer[pos + 7] + ((int) buffer[pos + 6] << 8)
+                + ((int) buffer[pos + 5] << 16) + ((int) buffer[pos + 4] << 24);
+        precip[cnt] = buffer[pos + 11] + ((int) buffer[pos + 10] << 8)
+                + ((int) buffer[pos + 9] << 16) + ((int) buffer[pos + 8] << 24);
     }
     fclose(fp);
 }

@@ -15,28 +15,30 @@ while true; do
     C=$((C+1))
     N=$((C%180))
 
-	cd /home/pi/rpi_ws281x
-	git fetch > build_log.txt 2>&1 
-
-	if [ -s build_log.txt ]
-	then
-   		echo "CHANGED"
-		cd /home/pi/rpi_ws281x
-		git pull
-		scons
-		echo "Kill old app..."
-		pkill test
-		echo "Launch new app..."
-		exec /home/pi/rpi_ws281x/test &
-		echo "Done"
-	else
-   		echo "NO CHANGES ($N)"
-	fi
-
     if [ $N -eq 0 ]
     then
-        echo "Update forecast "
+        echo "Update forecast... "
         curl https://aladdin-service.herokuapp.com/forecast > /home/pi/rpi_ws281x/forecast
+
+        echo "Check repository... "
+        cd /home/pi/rpi_ws281x
+        git fetch > build_log.txt 2>&1
+
+        if [ -s build_log.txt ]
+        then
+            echo "Application code has been changed. Getting changes..."
+            cd /home/pi/rpi_ws281x
+            git pull
+            echo "Bulding application..."
+            scons
+            echo "Kill old application..."
+            pkill test
+            echo "Launch new application..."
+            exec /home/pi/rpi_ws281x/test &
+            echo "Done"
+        else
+            echo "No changes in the repository ($N)"
+        fi
     fi
 
 	sleep 10s
