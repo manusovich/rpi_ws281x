@@ -398,6 +398,7 @@ void update_forecast(void) {
                 + ((int) buffer[pos + 5] << 16) + ((int) buffer[pos + 4] << 24);
         precip[cnt] = buffer[pos + 11] + ((int) buffer[pos + 10] << 8)
                 + ((int) buffer[pos + 9] << 16) + ((int) buffer[pos + 8] << 24);
+        printf("Temp: %d, Wind: %d, Precip: %d\n", forecast[cnt], wind[cnt], precip[cnt]);
     }
     fclose(fp);
 }
