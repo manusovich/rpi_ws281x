@@ -183,6 +183,10 @@ void matrix_fade() {
                 xrgb.r = (float) (xrgb.r * d);
                 xrgb.g = (float) (xrgb.g * d);
                 xrgb.b = (float) (xrgb.b * d);
+            } else {
+                xrgb.r += (float) (xrgb.r * d);
+                xrgb.g += (float) (xrgb.g * d);
+                xrgb.b += (float) (xrgb.b * d);
             }
 
             matrix[x][y] = xrgb;
