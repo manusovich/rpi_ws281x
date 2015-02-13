@@ -244,9 +244,9 @@ void matrix_render_precip() {
             int display = 1;
             if (p > 0 && p < 20) {
                 display = precip1[k];
-            } else if (p >= 20 && p < 55) {
+            } else if (p >= 20 && p < 50) {
                 display = precip2[k];
-            } else if (p >= 55) {
+            } else if (p >= 50) {
                 display = precip3[k];
             }
             if (display == 0) {
