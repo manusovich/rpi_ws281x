@@ -241,19 +241,13 @@ void matrix_render_precip() {
         int p = precip[y];
         int k;
         for (k = 0; k < WIDTH; k++) {
-            int display = 0;
+            int display = 1;
             if (p > 0 && p < 20) {
-                if (precip1[k] > 0) {
-                    display = 1;
-                }
-            } else if (p < 55) {
-                if (precip2[k] > 0) {
-                    display = 1;
-                }
-            } else {
-                if (precip3[k] > 0) {
-                    display = 1;
-                }
+                display = precip1[k];
+            } else if (p >= 20 && p < 55) {
+                display = precip2[k];
+            } else if (p >= 55) {
+                display = precip3[k];
             }
             if (display == 0) {
                 matrix[k][y] = getXRGB(0x000000);
