@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <AppKit/AppKit.h>
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
@@ -238,15 +239,22 @@ void matrix_render_precip() {
     for (y = 0; y < HEIGHT; y++) {
         int p = precip[y];
         int k, count = 0;
-        if (p > 0 && p < 20) {
-            count = 2;
-        } else if (p < 50) {
-            count = 3;
-        } else {
-            count = 4;
-        }
         for (k = 0; k < WIDTH; k++) {
-            if (k % count != 0) {
+            int display = 0;
+            if (p > 0 && p < 20) {
+                if (k % 2 == 0) {
+                    display = 1;
+                }
+            } else if (p < 55) {
+                if (k % 3 == 0 || k % 4 == 0) {
+                    display = 1;
+                }
+            } else {
+                if (k % 3 == 0 || k % 4 == 0 || k % 5 == 0) {
+                    display = 1;
+                }
+            }
+            if (display == 0) {
                 matrix[k][y] = getXRGB(0x000000);
             }
         }
