@@ -183,10 +183,11 @@ void matrix_fade() {
                 xrgb.r = (float) (xrgb.r * d);
                 xrgb.g = (float) (xrgb.g * d);
                 xrgb.b = (float) (xrgb.b * d);
-            } else {
-                xrgb.r += (float) (xrgb.r * d);
-                xrgb.g += (float) (xrgb.g * d);
-                xrgb.b += (float) (xrgb.b * d);
+            }
+            if (xrgb.r < rgb.r) {
+                xrgb.r += (float) (rgb.r * (1 - d));
+                xrgb.g += (float) (rgb.g * (1 - d));
+                xrgb.b += (float) (rgb.b * (1 - d));
             }
 
             matrix[x][y] = xrgb;
@@ -220,7 +221,7 @@ void matrix_render_wind(void) {
         matrix[pos][y] = getXRGB(up(forecast_color(y), 2));
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = - (float) wind[y] / 1500;
+            dotdirection[y] = -(float) wind[y] / 1500;
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
@@ -256,7 +257,7 @@ void update_forecast(void) {
     }
 
     int cnt;
-    #define BUFFER_SIZE 12 * 3 * sizeof(int)
+#define BUFFER_SIZE 12 * 3 * sizeof(int)
     unsigned char buffer[BUFFER_SIZE];
     fread(buffer, 1, BUFFER_SIZE, fp);
     for (cnt = 0; cnt < 12; cnt++) {
@@ -279,7 +280,7 @@ static void ctrl_c_handler(int signum) {
 static void setup_handlers(void) {
     struct sigaction sa =
             {
-                .sa_handler = ctrl_c_handler,
+                    .sa_handler = ctrl_c_handler,
             };
 
     sigaction(SIGKILL, &sa, NULL);
