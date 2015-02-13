@@ -92,12 +92,14 @@ struct XRGB {
     float b;
 };
 
-int rnd[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int precip1[] = {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
+int precip2[] = {1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0};
+int precip3[] = {0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0};
 
 ws2811_led_t dotcolors[] =
         {
@@ -241,15 +243,15 @@ void matrix_render_precip() {
         for (k = 0; k < WIDTH; k++) {
             int display = 0;
             if (p > 0 && p < 20) {
-                if (k % 2 == 0) {
+                if (precip1[k] > 0) {
                     display = 1;
                 }
             } else if (p < 55) {
-                if (k % 3 == 0 || k % 4 == 0) {
+                if (precip2[k] > 0) {
                     display = 1;
                 }
             } else {
-                if (k % 3 == 0 || k % 4 == 0 || k % 5 == 0) {
+                if (precip3[k] > 0) {
                     display = 1;
                 }
             }
