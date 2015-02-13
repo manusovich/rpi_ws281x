@@ -248,7 +248,7 @@ void matrix_render_precip(int frame) {
     }
     for (k = 0; k < WIDTH; k++) {
         if (k % count == 0) {
-            matrix[k][y] = getXRGB(up(forecast_color(y), .1));
+            matrix[k][y] = getXRGB(0x000000);
         }
     }
 }
