@@ -99,7 +99,7 @@ int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip1[] = {1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
 int precip2[] = {1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1};
-int precip3[] = {1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1};
+int precip3[] = {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1};
 
 ws2811_led_t dotcolors[] =
         {
@@ -242,11 +242,11 @@ void matrix_render_precip() {
         int k;
         for (k = 0; k < WIDTH; k++) {
             int display = 1;
-            if (p > 0 && p < 20) {
+            if (p > 0 && p < 50) {
                 display = precip1[k];
-            } else if (p >= 20 && p < 50) {
+            } else if (p >= 50 && p < 100) {
                 display = precip2[k];
-            } else if (p >= 50) {
+            } else if (p >= 100) {
                 display = precip3[k];
             }
             if (display == 0) {
