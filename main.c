@@ -176,7 +176,7 @@ void matrix_fade() {
             struct RGB rgb = getRGB(forecast_color(y));
             struct XRGB xrgb = matrix[x][y];
 
-            double d = 0.95;
+            double d = 0.98;
 
             if (xrgb.r > rgb.r) {
                 xrgb.r = (float) (xrgb.r * d);
