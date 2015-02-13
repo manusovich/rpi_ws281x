@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <Foundation/Foundation.h>
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
@@ -217,11 +218,11 @@ void matrix_render_exciter(void) {
         matrix[pos][y] = getXRGB(up(forecast_color(y), 2));
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = -((60 + (float) (rand() % 20)) / 100);
+            dotdirection[y] = - wind[y] / 1000;
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
-            dotdirection[y] = (60 + (float) (rand() % 20)) / 100;
+            dotdirection[y] = wind[y] / 1000;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
