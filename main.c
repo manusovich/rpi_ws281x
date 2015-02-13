@@ -240,7 +240,7 @@ void matrix_render_precip(int frame) {
             p = 100;
         }
         p = 100 - p;
-        if (frame % p / 2 == 0) {
+        if (frame % (p / 2) == 0) {
             matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .01));
         }
     }
