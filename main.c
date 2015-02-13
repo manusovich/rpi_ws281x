@@ -232,18 +232,16 @@ void matrix_render_wind(void) {
     }
 }
 
-void matrix_render_precip(void) {
+void matrix_render_precip(int frame) {
     int y;
     for (y = 0; y < HEIGHT; y++) {
-        int p = precip[y] % 10;
-        if (p > 15) {
-            p = 15;
+        int p = precip[y];
+        if (p > 200) {
+            p = 200;
         }
-        if (p > 0) {
-            int k;
-            for (k = 0; k < p; k++) {
-                matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .5));
-            }
+        p = 200 - p;
+        if (frame % p == 0) {
+            matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .5));
         }
     }
 }
@@ -312,9 +310,7 @@ int main(int argc, char *argv[]) {
         matrix_fade();
         matrix_render_wind();
 
-        if (c % (frames_per_second / 2)) {
-            matrix_render_precip();
-        }
+        matrix_render_precip(c);
 
         matrix_render();
 
