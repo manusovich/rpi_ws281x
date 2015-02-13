@@ -419,7 +419,7 @@ static void setup_handlers(void) {
 
 int main(int argc, char *argv[]) {
     // 15 frames /sec
-    int frames_per_second = 15;
+    int frames_per_second = 25;
 
 
     int ret = 0;
