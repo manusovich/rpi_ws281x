@@ -217,11 +217,11 @@ void matrix_render_exciter(void) {
         matrix[pos][y] = getXRGB(up(forecast_color(y), 2));
 
         if (dotposition[y] >= WIDTH - 1 && dotdirection[y] > 0) {
-            dotdirection[y] = - wind[y] / 100;
+            dotdirection[y] = - wind[y] / 400;
         }
 
         if (dotposition[y] <= 0 && dotdirection[y] < 0) {
-            dotdirection[y] = wind[y] / 100;
+            dotdirection[y] = wind[y] / 400;
         }
 
         dotposition[y] = dotposition[y] + dotdirection[y];
