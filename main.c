@@ -235,6 +235,7 @@ void matrix_render_wind(void) {
 void matrix_render_precip(void) {
     int y;
     for (y = 0; y < HEIGHT; y++) {
+        struct RGB rgb = getRGB(forecast_color(y));
         int p = precip[y] % 10;
         if (p > 15) {
             p = 15;
@@ -242,7 +243,7 @@ void matrix_render_precip(void) {
         if (p > 0) {
             int k;
             for (k = 0; k < p; k++) {
-                matrix[1 + rand() % 18][y] = getXRGB(0x000000);
+                matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .5));
             }
         }
     }
