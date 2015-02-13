@@ -233,22 +233,24 @@ void matrix_render_wind(void) {
     }
 }
 
-void matrix_render_precip(int frame) {
-    int y = rnd[frame % HEIGHT];
-    int p = precip[y];
-    int k, count = 0;
-    if (p > 0 && p < 20) {
-        count = 10;
-    } else if (p < 50) {
-        count = 5;
-    } else if (p < 100) {
-        count = 3;
-    } else {
-        count = 2;
-    }
-    for (k = 0; k < WIDTH; k++) {
-        if (k % count == 0) {
-            matrix[k][y] = getXRGB(0x000000);
+void matrix_render_precip() {
+    int y;
+    for (y = 0; y < HEIGHT; y++) {
+        int p = precip[y];
+        int k, count = 0;
+        if (p > 0 && p < 20) {
+            count = 10;
+        } else if (p < 50) {
+            count = 5;
+        } else if (p < 100) {
+            count = 3;
+        } else {
+            count = 2;
+        }
+        for (k = 0; k < WIDTH; k++) {
+            if (k % count == 0) {
+                matrix[k][y] = getXRGB(0x000000);
+            }
         }
     }
 }
@@ -316,9 +318,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         matrix_fade();
         matrix_render_wind();
-
-        matrix_render_precip(c);
-
+        matrix_render_precip();
         matrix_render();
 
         if (ws2811_render(&ledstring)) {
