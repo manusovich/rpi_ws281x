@@ -236,9 +236,16 @@ void matrix_render_wind(void) {
 void matrix_render_precip(int frame) {
     int y = rnd[frame % HEIGHT];
     int p = precip[y];
-    int k;
-    for (k = 0; k < p % 20; k++) {
-        matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .1));
+    int k, count = 0;
+    if (p > 0 && p < 20) {
+        count = 1;
+    } else if (p >= 20 && p < 50) {
+        count = 2;
+    } else {
+        count = 3;
+    }
+    for (k = 0; k < count; k++) {
+        matrix[rand() % WIDTH][y] = getXRGB(up(forecast_color(y), .1));
     }
 }
 
