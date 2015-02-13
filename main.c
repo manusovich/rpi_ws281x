@@ -238,16 +238,18 @@ void matrix_render_precip(int frame) {
     int p = precip[y];
     int k, count = 0;
     if (p > 0 && p < 20) {
-        count = 1;
+        count = 10;
     } else if (p < 50) {
-        count = 2;
+        count = 5;
     } else if (p < 100) {
         count = 3;
     } else {
-        count = 4;
+        count = 2;
     }
-    for (k = 0; k < count; k++) {
-        matrix[rand() % WIDTH][y] = getXRGB(up(forecast_color(y), .1));
+    for (k = 0; k < WIDTH; k++) {
+        if (k % count == 0) {
+            matrix[k][y] = getXRGB(up(forecast_color(y), .1));
+        }
     }
 }
 
