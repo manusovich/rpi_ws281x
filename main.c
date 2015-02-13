@@ -92,7 +92,8 @@ struct XRGB {
     float b;
 };
 
-float dotposition[] = {1, 4, 11, 8, 3, 12, 6, 10, 2, 11, 10, 14, 5, 16, 2, 7};
+int rnd[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
+float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -233,13 +234,11 @@ void matrix_render_wind(void) {
 }
 
 void matrix_render_precip(int frame) {
-    int y;
-    for (y = 0; y < HEIGHT; y++) {
-        int p = precip[y];
-        int k;
-        for (k = 0; k < p % 20; k++) {
-            matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .1));
-        }
+    int y = rnd[frame % HEIGHT];
+    int p = precip[y];
+    int k;
+    for (k = 0; k < p % 20; k++) {
+        matrix[1 + rand() % 18][y] = getXRGB(up(forecast_color(y), .1));
     }
 }
 
