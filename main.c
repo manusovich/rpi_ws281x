@@ -172,11 +172,11 @@ void matrix_render_forecast(void) {
 
 int precip_level(int value) {
     if (value > 0 && value < 50) {
-        return 2;
+        return 1;
     } else if (value >= 50 && value < 100) {
-        return 3;
+        return 2;
     } else if (value >= 100) {
-        return 4;
+        return 3;
     }
     return 0;
 }
