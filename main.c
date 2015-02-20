@@ -231,10 +231,10 @@ void update_forecast(void) {
     }
 
     int cnt;
-#define BUFFER_SIZE 12 * 3 * sizeof(int)
+#define BUFFER_SIZE 14 * 3 * sizeof(int)
     unsigned char buffer[BUFFER_SIZE];
     fread(buffer, 1, BUFFER_SIZE, fp);
-    for (cnt = 0; cnt < 12; cnt++) {
+    for (cnt = 0; cnt < 14; cnt++) {
         int pos = (int) (cnt * 3 * sizeof(int));
         forecast[cnt] = buffer[pos + 3] + ((int) buffer[pos + 2] << 8)
                 + ((int) buffer[pos + 1] << 16) + ((int) buffer[pos] << 24);
