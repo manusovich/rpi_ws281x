@@ -170,16 +170,29 @@ void matrix_render_forecast(void) {
     }
 }
 
+int precip_level(int value) {
+    if (value > 0 && value < 50) {
+        return 2;
+    } else if (value >= 50 && value < 100) {
+        return 3;
+    } else if (value >= 100) {
+        return 4;
+    }
+    return 0;
+}
+
 void matrix_render_wind(void) {
     int y;
 
     for (y = 0; y < HEIGHT; y++) {
+        int offset = precip_level(precip[y]);
+
         int pos = (int) dotposition[y];
-        if (pos >= (WIDTH - 1)) {
-            pos = WIDTH - 1;
+        if (pos >= (WIDTH - (1 + offset))) {
+            pos = WIDTH - (1 + offset);
         }
-        if (pos <= 0) {
-            pos = 0;
+        if (pos <= offset) {
+            pos = offset;
         }
 
         matrix[pos][y] = getXRGB(up(forecast_color(y), 2));
