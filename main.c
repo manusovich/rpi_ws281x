@@ -217,8 +217,8 @@ void matrix_render_precip() {
             for (x = 0; x < pl; x++) {
                 int xa = x;
                 int xb = WIDTH - 1 - x;
-                matrix[xa][y] = getXRGB(0xAAAAAA);
-                matrix[xb][y] = getXRGB(0xAAAAAA);
+                matrix[xa][y] = getXRGB(0x555555);
+                matrix[xb][y] = getXRGB(0x555555);
             }
         }
     }
