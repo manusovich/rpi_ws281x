@@ -30,14 +30,7 @@ ws2811_t ledstring =
                                                 .count = LED_COUNT,
                                                 .invert = 0,
                                                 .brightness = 255,
-                                        },
-                                [1] =
-                                        {
-                                                .gpionum = 0,
-                                                .count = 0,
-                                                .invert = 0,
-                                                .brightness = 0,
-                                        },
+                                        }
                         },
         };
 
@@ -55,13 +48,12 @@ struct XRGB {
 
 float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
-int precippos[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-float precipdir[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int precippos[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+// paletton.com
 ws2811_led_t dotcolors[] =
         {
                 0x882D61, 0x6F256F, 0x582A72, 0x4B2D73, 0x403075, 0x343477, 0x2E4272, 0x29506D, 0x226666,
@@ -120,15 +112,14 @@ ws2811_led_t forecast_color(int y) {
         f = forecast[y - 2];
     }
 
-    int max = 9900;
-    int min = 0100;
-    int a = max - min;
-    int c = f - min;
-    if (c < 0) {
-        c = 0;
+    int max = 9999;
+    int a = max;
+
+    if (f < 0) {
+        f = 0;
     }
 
-    int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * c);
+    int pos = (int) ((float) ARRAY_SIZE(dotcolors) / a * f);
     ws2811_led_t color = up(dotcolors[pos], 0.3);
     return color;
 }
@@ -269,24 +260,16 @@ static void setup_handlers(void) {
 
 
 int main(int argc, char *argv[]) {
-    // 15 frames /sec
     int frames_per_second = 30;
-
-
     int ret = 0;
 
     setup_handlers();
-
     if (ws2811_init(&ledstring)) {
         return -1;
     }
 
     long c = 0;
-
     update_forecast();
-
-    printf("Run loopd\n");
-
     matrix_render_forecast();
 
     while (1) {
@@ -301,11 +284,10 @@ int main(int argc, char *argv[]) {
         }
 
         usleep((useconds_t) (1000000 / frames_per_second));
-
         c++;
 
-        if (c % (frames_per_second * 60 * 10) == 0) {
-            // each 10 minutes update forecast
+        if (c % (frames_per_second * 60 * 5) == 0) {
+            // each 5 minutes update forecast
             update_forecast();
         }
     }
