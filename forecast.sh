@@ -13,7 +13,7 @@ C=0
 N=0
 while true; do
     C=$((C+1))
-    #N=$((C%180))
+    N=$((C%180))
 
     if [ $N -eq 0 ]
     then
