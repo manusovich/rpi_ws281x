@@ -1,47 +1,8 @@
-/*
- * main.c
- *
- * Copyright (c) 2014 Jeremy Garff <jer @ jers.net>
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- *
- *     1.  Redistributions of source code must retain the above copyright notice, this list of
- *         conditions and the following disclaimer.
- *     2.  Redistributions in binary form must reproduce the above copyright notice, this list
- *         of conditions and the following disclaimer in the documentation and/or other materials
- *         provided with the distribution.
- *     3.  Neither the name of the owner nor the names of its contributors may be used to endorse
- *         or promote products derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/mman.h>
 #include <signal.h>
-#include "clk.h"
-#include "gpio.h"
-#include "dma.h"
-#include "pwm.h"
 
 #include "ws2811.h"
 
@@ -94,12 +55,12 @@ struct XRGB {
 
 float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
+float precippos[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float precipdir[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int wind[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int precip1[] = {1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1};
-int precip2[] = {1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1};
-int precip3[] = {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1};
 
 ws2811_led_t dotcolors[] =
         {
@@ -238,21 +199,21 @@ void matrix_render_wind(void) {
 void matrix_render_precip() {
     int y;
     for (y = 0; y < HEIGHT; y++) {
-        int p = precip[y];
-        int k;
-        for (k = 0; k < WIDTH; k++) {
-            int display = 1;
-            if (p > 0 && p < 50) {
-                display = precip1[k];
-            } else if (p >= 50 && p < 100) {
-                display = precip2[k];
-            } else if (p >= 100) {
-                display = precip3[k];
-            }
-            if (display == 0) {
-                matrix[k][y] = getXRGB(0x000000);
-            }
-        }
+//        int p = precip[y];
+//        int k;
+//        for (k = 0; k < WIDTH; k++) {
+//            int display = 1;
+//            if (p > 0 && p < 50) {
+//                display = precip1[k];
+//            } else if (p >= 50 && p < 100) {
+//                display = precip2[k];
+//            } else if (p >= 100) {
+//                display = precip3[k];
+//            }
+//            if (display == 0) {
+//                matrix[k][y] = getXRGB(0x000000);
+//            }
+//        }
     }
 }
 
