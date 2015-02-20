@@ -213,16 +213,12 @@ void matrix_render_precip() {
     int y, x;
     for (y = 0; y < HEIGHT; y++) {
         int pl = precip_level(precip[y]);
-
-        precippos[y]++;
-        if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
-            precippos[y] = 0;
-        }
-
-
-        struct XRGB color = getXRGB(dotcolors[precippos[y]]);
-
         if (pl > 0) {
+            precippos[y]++;
+            if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
+                precippos[y] = 0;
+            }
+            struct XRGB color = getXRGB(up(dotcolors[precippos[y]], .5));
             for (x = 0; x < pl; x++) {
                 int xa = x;
                 int xb = WIDTH - 1 - x;
