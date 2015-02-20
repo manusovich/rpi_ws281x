@@ -46,8 +46,8 @@ struct XRGB {
     float b;
 };
 
-float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7, 16};
-float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1, 1};
+float dotposition[]     = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9};
+float dotdirection[]    = {1, -1,  1,-1, 1, -1, 1, -1, 1, -1, 1,  1,-1, 1};
 int forecast[]  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int wind[]      = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int precip[]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -105,12 +105,7 @@ void matrix_render(void) {
 }
 
 ws2811_led_t forecast_color(int y) {
-    int f = 0;
-    if (y == 0 || y == 1 || y == 2) {
-        f = forecast[0];
-    } else {
-        f = forecast[y - 2];
-    }
+    int f = forecast[y];
 
     int max = 9999;
     int a = max;
