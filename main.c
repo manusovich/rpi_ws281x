@@ -218,7 +218,7 @@ void matrix_render_precip() {
             if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
                 precippos[y] = 0;
             }
-            struct XRGB color = getXRGB(up(dotcolors[precippos[y]], .5));
+            struct XRGB color = getXRGB(up(dotcolors[precippos[y]], .3));
             for (x = 0; x < pl; x++) {
                 int xa = x;
                 int xb = WIDTH - 1 - x;
