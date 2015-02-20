@@ -10,16 +10,19 @@ echo "Start pooling for changes"
 
 
 C=0
-N=0
 while true; do
     C=$((C+1))
-    N=$((C%180))
 
-    if [ $N -eq 0 ]
+    # once per 10 minutes
+    if [ $((C%60)) -eq 0 ]
     then
         echo "Update forecast... "
         curl https://aladdin-service.herokuapp.com/forecast > /home/pi/rpi_ws281x/forecast
+    fi
 
+    # once per one hour
+    if [ $((C%360)) -eq 0 ]
+    then
         echo "Check repository... "
         cd /home/pi/rpi_ws281x
         git fetch > build_log.txt 2>&1
