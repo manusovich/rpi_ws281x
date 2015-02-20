@@ -55,7 +55,7 @@ struct XRGB {
 
 float dotposition[] = {15, 4, 11, 8, 0, 12, 6, 10, 2, 13, 3, 14, 5, 9, 7};
 float dotdirection[] = {1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1};
-float precippos[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int precippos[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float precipdir[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 int forecast[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -213,12 +213,21 @@ void matrix_render_precip() {
     int y, x;
     for (y = 0; y < HEIGHT; y++) {
         int pl = precip_level(precip[y]);
+
+        precippos[y]++;
+        if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
+            precippos[y] = 0;
+        }
+
+
+        struct XRGB color = getXRGB(dotcolors[precippos[y]]);
+
         if (pl > 0) {
             for (x = 0; x < pl; x++) {
                 int xa = x;
                 int xb = WIDTH - 1 - x;
-                matrix[xa][y] = getXRGB(0x555555);
-                matrix[xb][y] = getXRGB(0x555555);
+                matrix[xa][y] = color;
+                matrix[xb][y] = color;
             }
         }
     }
