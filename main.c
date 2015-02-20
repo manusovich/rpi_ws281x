@@ -210,23 +210,17 @@ void matrix_render_wind(void) {
 }
 
 void matrix_render_precip() {
-    int y;
+    int y, x;
     for (y = 0; y < HEIGHT; y++) {
-//        int p = precip[y];
-//        int k;
-//        for (k = 0; k < WIDTH; k++) {
-//            int display = 1;
-//            if (p > 0 && p < 50) {
-//                display = precip1[k];
-//            } else if (p >= 50 && p < 100) {
-//                display = precip2[k];
-//            } else if (p >= 100) {
-//                display = precip3[k];
-//            }
-//            if (display == 0) {
-//                matrix[k][y] = getXRGB(0x000000);
-//            }
-//        }
+        int pl = precip_level(precip[y]);
+        if (pl > 0) {
+            for (x = 0; x < pl; x++) {
+                int xa = x;
+                int xb = WIDTH - 1 - x;
+                matrix[xa][y] = getXRGB(0xAAAAAA);
+                matrix[xb][y] = getXRGB(0xAAAAAA);
+            }
+        }
     }
 }
 
