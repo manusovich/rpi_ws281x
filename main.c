@@ -120,8 +120,8 @@ ws2811_led_t forecast_color(int y) {
         f = forecast[y - 2];
     }
 
-    int max = 9999;
-    int min = 3000;
+    int max = 9900;
+    int min = 0100;
     int a = max - min;
     int c = f - min;
     if (c < 0) {
