@@ -200,14 +200,16 @@ void matrix_render_wind(void) {
     }
 }
 
-void matrix_render_precip() {
+void matrix_render_precip(int counter) {
     int y, x;
     for (y = 0; y < HEIGHT; y++) {
         int pl = precip_level(precip[y]);
         if (pl > 0) {
-            precippos[y]++;
-            if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
-                precippos[y] = 0;
+            if (counter % 2 == 0) {
+                precippos[y]++;
+                if (precippos[y] > ARRAY_SIZE(dotcolors) - 1) {
+                    precippos[y] = 0;
+                }
             }
             struct XRGB color = getXRGB(up(dotcolors[precippos[y]], .3));
             for (x = 0; x < pl; x++) {
@@ -275,7 +277,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         matrix_fade();
         matrix_render_wind();
-        matrix_render_precip();
+        matrix_render_precip(c);
         matrix_render();
 
         if (ws2811_render(&ledstring)) {
